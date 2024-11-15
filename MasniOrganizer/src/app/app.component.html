@@ -1,0 +1,18 @@
+<!--suppress ALL -->
+<header>
+  <div class="image-wrapper">
+    <img src="./dog.png" alt="Dog Image">
+    <img class="logo" src="./banner.png" alt="Banner Image">
+  </div>
+  <div class="navigation">
+    <button class="header-button" (click)="navigateToHome()" *ngIf="showHomeButton">
+      <img src="./home.png" alt="Home Icon">Home
+    </button>
+    <button class="header-button" (click)="logout()" *ngIf="showLogoutButton">
+      <img src="./logout.png" alt="Logout Icon">Logout
+    </button>
+  </div>
+</header>
+
+
+<router-outlet />

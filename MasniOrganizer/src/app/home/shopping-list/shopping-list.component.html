@@ -1,0 +1,24 @@
+<h2>Shopping List</h2>
+
+<div class="shopping-list">
+  <input [(ngModel)]="newShoppingListItem.name" placeholder="Item Name" />
+  <button class="clear-button" (click)="addShoppingListItem()">Add Shopping List Item</button>
+</div>
+
+<div *ngIf="shoppingListItems.length > 0" class="shopping-list">
+  <h3>Shopping List Items</h3>
+  <ul>
+    <li *ngFor="let item of shoppingListItems"
+        [class.used]="item.used"
+        (click)="toggleUsed(item)">
+      <span>{{item.name}}</span>
+      <div class="delete-button-container">
+        <button class="delete-button" (click)="deleteShoppingListItem(item.id!); $event.stopPropagation()">&times;</button>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<div class="clear-button-container">
+  <button class="clear-button" (click)="clearAllItems()">Clear All Items</button>
+</div>

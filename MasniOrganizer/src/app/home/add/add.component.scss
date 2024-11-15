@@ -1,0 +1,71 @@
+/* Form container */
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 500px; /* Limits the width for better readability */
+    margin: 0 auto; /* Centers the form on the page */
+    padding: 1.5rem; /* Adds padding around the form */
+    border: 1px solid #ccc; /* Adds a border for clarity */
+    border-radius: 10px; /* Rounds the corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+    background-color: #f9f9f9; /* Light background color */
+  }
+  
+  /* Label styling */
+  label {
+    margin-bottom: 0.5rem; /* Space between label and input */
+    font-weight: bold; /* Makes labels stand out */
+  }
+  
+  /* Input and textarea styling */
+  input[type="date"],
+  input[type="time"],
+  input[type="text"],
+  textarea {
+    width: 100%; /* Full width */
+    padding: 0.5rem; /* Adds padding for comfort */
+    margin-bottom: 1rem; /* Space below each input */
+    border: 1px solid #ccc; /* Adds border */
+    border-radius: 5px; /* Rounds the corners */
+    font-size: 1rem; /* Font size for inputs */
+  }
+  
+  /* Textarea specific styling */
+  textarea {
+    resize: vertical; /* Allows vertical resizing only */
+    min-height: 80px; /* Sets minimum height */
+  }
+  
+  /* Button styling */
+  button {
+    padding: 0.7rem; /* Padding inside the button */
+    background-color: #0075ff; /* Primary button color */
+    color: #ffffff; /* Button text color */
+    border: none; /* Removes default border */
+    border-radius: 5px; /* Rounds the corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 1rem; /* Font size for button */
+    font-weight: bold;
+    transition: background-color 0.3s; /* Smooth background change */
+  }
+  
+  /* Button hover effect */
+  button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+  }
+  
+  /* Responsive styling */
+  @media (max-width: 600px) {
+    form {
+      padding: 1rem; /* Reduces padding on smaller screens */
+    }
+  
+    input[type="date"],
+    input[type="time"],
+    input[type="text"],
+    textarea,
+    button {
+      font-size: 0.9rem; /* Slightly smaller font size */
+    }
+  }
+  

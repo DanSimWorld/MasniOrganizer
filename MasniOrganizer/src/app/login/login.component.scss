@@ -1,0 +1,97 @@
+/* Center the login container on the page */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+  }
+
+  /* Style for the form title */
+  .login-container h2 {
+    margin-bottom: 1.5rem;
+    color: #333;
+    font-size: 1.8rem;
+  }
+
+  /* Label styling */
+  .login-container label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #555;
+  }
+
+  /* Input fields styling */
+  .login-container input[type="email"],
+  .login-container input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+  }
+
+  .login-container input[type="email"]:focus,
+  .login-container input[type="password"]:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+
+  /* Button styling */
+  .login-container button {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #0075ff;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .login-container button:hover {
+    background-color: #0056b3;
+  }
+
+  .login-container button:active {
+    transform: scale(0.98);
+  }
+
+  /* Error message styling */
+  .login-container .error {
+    color: #d9534f;
+    margin-top: 1rem;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  /* Responsive adjustments for mobile screens */
+  @media (max-width: 600px) {
+    .login-container {
+      padding: 1.5rem;
+      max-width: 90%;
+    }
+
+    .login-container h2 {
+      font-size: 1.5rem;
+    }
+
+    .login-container input[type="email"],
+    .login-container input[type="password"],
+    .login-container button {
+      font-size: 0.9rem;
+      padding: 0.65rem;
+    }
+  }

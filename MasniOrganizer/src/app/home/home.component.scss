@@ -1,0 +1,75 @@
+/* Tile container for grid layout */
+.tile-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive columns */
+  grid-gap: 20px;
+  margin: 0 auto;
+  padding: 1rem;
+  max-width: 80%; /* Keeps tiles centered within a reasonable width */
+}
+
+/* Styling for each tile */
+.tile {
+  text-align: center;
+  padding: 1.5rem;
+  background-color: #6da7e9;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  color: white;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+/* Hover effect */
+.tile:hover {
+  transform: translateY(-2px);
+  cursor: pointer;
+}
+
+/* Active effect */
+.tile:active {
+  transform: translateY(2px);
+}
+
+/* Responsive font size adjustment */
+.tile h1 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 1024px) {
+  .tile-container {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 2 columns for tablets */
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .tile-container {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Adjust to 150px minimum */
+    padding: 0.5rem; /* Less padding on smaller devices */
+  }
+
+  .tile {
+    padding: 1.2rem; /* Slightly smaller padding for smaller screens */
+  }
+
+  .tile h1 {
+    font-size: 1.1rem; /* Smaller font size for better fit */
+  }
+}
+
+@media (max-width: 480px) {
+  .tile-container {
+    grid-template-columns: 1fr; /* Single column for mobile */
+    padding: 0.5rem; /* Less padding */
+  }
+
+  .tile {
+    padding: 1rem; /* Small padding */
+  }
+
+  .tile h1 {
+    font-size: 1rem; /* Smaller font size for mobile */
+  }
+}

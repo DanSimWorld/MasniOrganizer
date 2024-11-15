@@ -1,0 +1,258 @@
+.month-view, .day-view {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+button {
+  background-color: #6da7e9;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 0.6rem 1rem;
+    margin: 0 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    text-align: left;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+  transform: translateY(-2px);
+  cursor: pointer;
+}
+
+/* Active effect */
+button:active {
+  transform: translateY(2px);
+}
+
+.month-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+
+  h2 {
+    flex: 1;
+    text-align: center;
+    font-size: 2em; /* Larger font size for better visibility */
+    color: #37474f; /* Darker color for better contrast */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  button {
+    background-color: #0075ff; /* Teal background */
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+
+    &:hover {
+      background-color: #00796b; /* Darker teal on hover */
+      transform: translateY(-2px); /* Slight lift effect */
+    }
+
+    &:active {
+      transform: translateY(1px); /* Push down effect on click */
+    }
+  }
+}
+
+h2 {
+  font-size: 2.2em; /* Increase title size */
+  margin-bottom: 20px; /* Space below title */
+  color: white;
+  background-color: #0075ff;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  background-color: #ffaa64; /* Light background for the calendar */
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  margin: 20px; /* Subtle shadow for depth */
+}
+
+.day {
+  padding: 15px; /* More padding for a better touch target */
+  cursor: pointer;
+  background-color: #ffdfba; /* White background for days */
+  border: 1px solid black; /* Light teal border */
+  border-radius: 8px;
+  color: #333;
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.3s;
+
+  &:hover {
+    background-color: #f39e49; /* Light hover effect */
+    transform: scale(1.05); /* Slight scale effect */
+  }
+}
+
+.day.selected {
+  background-color: #00796b; /* Dark teal for selected day */
+  color: #fff;
+}
+
+.day-view {
+  margin-top: 20px;
+
+  button {
+    background-color: #6da7e9; /* Same as month view buttons */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-bottom: 15px;
+    transition: background-color 0.3s, transform 0.3s;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+
+  h2 {
+    font-size: 2em; /* Larger title for the day view */
+    color: white; /* Teal color for the day title */
+    margin-bottom: 15px;
+  }
+}
+
+.time-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 10px;
+}
+
+.time-slots {
+  padding: 10px;
+  background-color: #ffaa64; /* Light green for time slots */
+  color: black; /* Dark green text */
+  border-radius: 5px;
+
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.time-label {
+  background-color: #ffdfba;
+  padding: 10px;
+  color: black; /* Dark green text */
+  border-radius: 5px;
+  border: 1px solid black; /* Light green border */
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.appointments {
+  background-color: #ffdfba;
+  padding: 10px;
+  color: black; /* Dark green text */
+  border-radius: 5px;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  border-bottom: 1px solid black;   /* Light green border */
+  transition: background-color 0.3s, transform 0.3s;
+  cursor: pointer;
+}
+
+.no-appointments {
+  color: #ff5722; /* Red color for no appointments message */
+  font-style: italic;
+}
+
+.add-appointment-container {
+  display: block; /* Block display */
+  align-items: center; /* Center items (if you add flex or grid) */
+  text-align: center; /* Center text within the container */
+  max-width: 10%; /* Maximum width of the container */
+  min-width: 200px;
+  margin: 0 auto; /* Center the container horizontally */
+}
+
+
+.add-appointment {
+  background-color: #6da7e9;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.6rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  display: block;
+
+  &:hover {
+    transform: translateY(-2px);
+    cursor: pointer;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .month-view, .day-view {
+    padding: 0 10px; /* Additional padding for smaller screens */
+  }
+
+  .grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 columns for smaller screens */
+  }
+
+  .month-navigation {
+    flex-direction: column; /* Stack buttons vertically */
+  }
+
+  button {
+    width: 100%; /* Full width buttons */
+    margin: 5px 0; /* Space between buttons */
+  }
+
+  h2 {
+    font-size: 1.5em; /* Smaller heading on mobile */
+  }
+}
+
+.day {
+  text-align: center;
+}
+
+.day-abbreviation {
+  font-size: 0.8em;
+  color: #555;
+}
+
+.appointment-times {
+  display: flex;           /* Align items horizontally */
+  gap: 10px;               /* Space between the start and end time */
+  font-size: 0.8em;        /* Make the text a little smaller */
+  color: #555;             /* A softer color for the times */
+}
+
+.appointment-times span {
+  font-weight: bold;       /* Bold the times */
+  color: #333;             /* Darker color for contrast */
+}
+
+
+
+
