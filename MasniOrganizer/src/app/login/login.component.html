@@ -1,14 +1,22 @@
 <div class="login-container">
-    <h2>Login</h2>
-    <form (submit)="login()">
-      <label for="email">Email:</label>
-      <input type="email" id="email" [(ngModel)]="email" name="email" required>
-  
-      <label for="password">Password:</label>
-      <input type="password" id="password" [(ngModel)]="password" name="password" required>
-  
-      <button type="submit">Login</button>
-    </form>
-    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+  <h2>{{ isLoginMode ? 'Login' : 'Reset Password' }}</h2>
+<form>
+  <form (submit)="login()">
+    <label for="email">Email:</label>
+    <input type="email" id="email" [(ngModel)]="email" name="email" required>
+
+    <label for="password" *ngIf="isLoginMode">Password:</label>
+    <input type="password" id="password" [(ngModel)]="password" name="password" *ngIf="isLoginMode" required>
+
+    <button type="submit">{{ isLoginMode ? 'Login' : 'Send Reset Link' }}</button>
+  </form>
+
+  <div class="reset-password">
+  <button *ngIf="isLoginMode" (click)="onForgotPassword()">Forgot Password?</button>
+  <button *ngIf="!isLoginMode" (click)="onBackToLogin()">Back to Login</button>
   </div>
-  
+
+  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
+</form>
+</div>

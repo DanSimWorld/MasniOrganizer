@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from 'firebase/auth';
 import { getFirestore, collection, addDoc, onSnapshot, Timestamp, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { getAnalytics, isSupported } from 'firebase/analytics';
 import { Appointment } from './appointment.model';
@@ -65,6 +65,17 @@ export class FirebaseService {
 
   isLoggedIn(): boolean {
     return this.auth.currentUser !== null;
+  }
+
+  // Password reset method
+  async resetPassword(email: string): Promise<void> {
+    try {
+      await sendPasswordResetEmail(this.auth, email);
+      console.log('Password reset email sent successfully');
+    } catch (error: unknown) {
+      this.handleError(error);
+      throw new Error(error instanceof Error ? error.message : 'An unknown error occurred during password reset');
+    }
   }
 
   //appointments coding
