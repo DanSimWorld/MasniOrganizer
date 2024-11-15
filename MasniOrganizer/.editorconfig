@@ -8,9 +8,7 @@ indent_size = 2
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.ts]
-quote_type = single
-ij_typescript_use_double_quotes = false
+# No specific configuration here for quote type or other unsupported properties.
 
 [*.md]
 max_line_length = off
