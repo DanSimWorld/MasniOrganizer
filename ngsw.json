@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1731699043380,
+  "timestamp": 1731699415918,
   "index": "/MasniOrganizer/index.html",
   "assetGroups": [
     {
@@ -47,7 +47,7 @@
   ],
   "dataGroups": [],
   "hashTable": {
-    "/MasniOrganizer/banner.png": "eefe29223a45647568fefb8ad8c09faec2424a81",
+    "/MasniOrganizer/banner.png": "18c211b49a70b3187b28b294318e2e31520373ac",
     "/MasniOrganizer/dog.png": "3b228a515b5fc027943f4e2a26b4ff377b6b5ab8",
     "/MasniOrganizer/favicon.ico": "807adf44872564a580e6631e92acc95984ee2923",
     "/MasniOrganizer/home.png": "cab2885e814de883d08a1360cda9fd5fd6b6bac8",
@@ -62,7 +62,7 @@
     "/MasniOrganizer/index.html": "3e37fdd885065df1229715109a99335b58f0ece8",
     "/MasniOrganizer/logout.png": "620b4f06bdd561ae82b8555bf083509fd1e29384",
     "/MasniOrganizer/main.2b8b3d2f4c59f9cb.js": "16efc645d7b3dee1486d6893c7c16ae0542fc160",
-    "/MasniOrganizer/manifest.webmanifest": "8359416a734d9eaf3416c2229f29a9ff3f02ae97",
+    "/MasniOrganizer/manifest.webmanifest": "d7dcdabf1f1f4ba35fb6654eb274173eda67020f",
     "/MasniOrganizer/polyfills.7a79b1741bd20fb9.js": "94b0e60d02274ef3838712176f5248ae02d01b54",
     "/MasniOrganizer/runtime.a8df37e6941401da.js": "05e4e9a47bf57858f4132b1abc88856dddbc864b",
     "/MasniOrganizer/styles.5dd02074a0721ddd.css": "561af3f737df80a0b16f8c6399f815ddc59077f2"
