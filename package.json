@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@angular/fire": "^18.0.1",
+    "@angular/service-worker": "^18.2.12",
+    "date-fns": "^4.1.0",
+    "firebase": "^10.14.1"
+  },
+  "devDependencies": {
+    "@types/uuid": "^10.0.0"
+  }
+}
