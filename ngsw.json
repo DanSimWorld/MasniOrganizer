@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1731698650531,
+  "timestamp": 1731698830076,
   "index": "/MasniOrganizer/index.html",
   "assetGroups": [
     {
@@ -13,7 +13,7 @@
       "urls": [
         "/MasniOrganizer/favicon.ico",
         "/MasniOrganizer/index.html",
-        "/MasniOrganizer/main.925d297517208aa3.js",
+        "/MasniOrganizer/main.2b8b3d2f4c59f9cb.js",
         "/MasniOrganizer/manifest.webmanifest",
         "/MasniOrganizer/polyfills.7a79b1741bd20fb9.js",
         "/MasniOrganizer/runtime.a8df37e6941401da.js",
@@ -59,9 +59,9 @@
     "/MasniOrganizer/icons/icon-512x512.png": "7645502f463d3277472a25f2a62c1b08b8a5f697",
     "/MasniOrganizer/icons/icon-72x72.png": "de7c7a30627b2b14d110468c0b5263785510d25d",
     "/MasniOrganizer/icons/icon-96x96.png": "28a2214d276a2a6d5a023e4a6e4382a978a5831c",
-    "/MasniOrganizer/index.html": "7f455f8d9ae8644b0a2997c3a44a4e032d3f844e",
+    "/MasniOrganizer/index.html": "1a4d7f4430d205d309a25e1e66ce73378acd4dc3",
     "/MasniOrganizer/logout.png": "620b4f06bdd561ae82b8555bf083509fd1e29384",
-    "/MasniOrganizer/main.925d297517208aa3.js": "ff4ed615e5da120f0d3f9f309f80738f661fb8ee",
+    "/MasniOrganizer/main.2b8b3d2f4c59f9cb.js": "16efc645d7b3dee1486d6893c7c16ae0542fc160",
     "/MasniOrganizer/manifest.webmanifest": "8359416a734d9eaf3416c2229f29a9ff3f02ae97",
     "/MasniOrganizer/polyfills.7a79b1741bd20fb9.js": "94b0e60d02274ef3838712176f5248ae02d01b54",
     "/MasniOrganizer/runtime.a8df37e6941401da.js": "05e4e9a47bf57858f4132b1abc88856dddbc864b",
