@@ -7,6 +7,7 @@ import { Appointment } from './appointment.model';
 import { Observable } from 'rxjs';
 import { FoodItem } from './home/foodplanner/food-item.model';
 import { ShoppingListItem } from './home/shopping-list/shopping-list-item.model';
+import {ShoppingListComponent} from "./home/shopping-list/shopping-list.component";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBJ4VU8NzNDGCSWE0zgPDpzW8jlmLVUwh8",
@@ -226,24 +227,25 @@ export class FirebaseService {
     }
   }
 
-  // Add shopping list item
+  // Add a new shopping list item for the current user
   async addShoppingListItem(shoppingListItem: ShoppingListItem): Promise<void> {
     try {
       const docRef = await addDoc(collection(this.db, 'shoppingListItems'), {
         name: shoppingListItem.name,
-        userId: shoppingListItem.userId ?? "",  // Ensure userId is never undefined
+        userId: shoppingListItem.userId,  // Ensure userId is set properly
+        used: shoppingListItem.used || false, // Set default for 'used' if not provided
       });
-      console.log("Shopping List Item added with ID:", docRef.id);
-      shoppingListItem.id = docRef.id; // Set the id of the Shopping List Item
-    } catch (e: unknown) {
-      console.error("Error adding shopping list item:", e);
+      console.log('Shopping List item added with ID:', docRef.id);
+      shoppingListItem.id = docRef.id; // Set the id of the FoodItem
+    } catch (e) {
+      console.error('Error adding shopping list item:', e);
     }
   }
 
   // Get shopping list items for a specific user
   async getShoppingListItems(userId: string): Promise<ShoppingListItem[]> {
-    const shoppingListCollection = collection(this.db, 'shoppingListItems');
-    const q = query(shoppingListCollection, where('userId', '==', userId)); // Filter by userId
+    const shoppingListItemsCollection = collection(this.db, 'shoppingListItems');
+    const q = query(shoppingListItemsCollection, where('userId', '==', userId)); // Filter by userId
     const querySnapshot = await getDocs(q);
     const shoppingListItems: ShoppingListItem[] = [];
     querySnapshot.forEach((doc) => {
@@ -251,8 +253,6 @@ export class FirebaseService {
     });
     return shoppingListItems;
   }
-
-
 
   // Update a shopping list item
   async updateShoppingListItem(id: string, updatedShoppingListItem: ShoppingListItem): Promise<void> {
@@ -262,24 +262,24 @@ export class FirebaseService {
       userId: updatedShoppingListItem.userId,
       used: updatedShoppingListItem.used, // Include "used" property in the update
     });
-    console.log("Shopping List item updated:", id);
+    console.log('Shopping list item updated:', id);
   }
 
   // Delete a shopping list item
   async deleteShoppingListItem(id: string): Promise<void> {
     const shoppingListItemRef = doc(this.db, 'shoppingListItems', id);
     await deleteDoc(shoppingListItemRef);
-    console.log("Shopping List item deleted:", id);
+    console.log('Shopping List item deleted:', id);
   }
 
-  // Clear all shopping list items for a user
+  // Clear all shopping items for a specific user
   async clearShoppingListItems(userId: string): Promise<void> {
     const shoppingListItems = await this.getShoppingListItems(userId);
     for (const item of shoppingListItems) {
-      if (item.id) { // Ensure that item.id is not undefined or null
+      if (item.id) {
         await this.deleteShoppingListItem(item.id);
       } else {
-        console.error("Shopping List item does not have a valid ID:", item);
+        console.error('Shopping List item does not have a valid ID:', item);
       }
     }
   }

@@ -3,6 +3,8 @@ import { ShoppingListItem } from './shopping-list-item.model';
 import { FirebaseService } from '../../firebase.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { getAuth } from "firebase/auth";
+
 
 @Component({
   selector: 'app-shopping-list',
@@ -14,37 +16,58 @@ import { FormsModule } from '@angular/forms';
 export class ShoppingListComponent implements OnInit {
   shoppingListItems: ShoppingListItem[] = [];
   newShoppingListItem: ShoppingListItem = { name: '', userId: '', used: false };
-  userId: string = 'user123';  // Dynamically set this based on the authenticated user
+  userId: string = '';
 
   constructor(private firebaseService: FirebaseService) {}
 
   ngOnInit(): void {
-    // Assuming userId is set dynamically (e.g., from a user authentication service)
-    this.firebaseService.getShoppingListItems(this.userId).then((items) => {
-      this.shoppingListItems = items;
-    });
+    const user = getAuth().currentUser;
+    if (user) {
+      this.userId = user.uid; // Get user ID from Firebase Authentication
+      this.loadShoppingListItems();
+    } else {
+      console.log('User is not authenticated');
+    }
+  }
+
+  loadShoppingListItems() {
+    if (this.userId) {
+      this.firebaseService.getShoppingListItems(this.userId).then((items) => {
+        this.shoppingListItems = items;
+      }).catch((error) => {
+        console.error('Error loading food items:', error);
+      });
+    }
   }
 
   addShoppingListItem(): void {
-    if (this.newShoppingListItem.name) {
+    if (this.newShoppingListItem.name && this.userId) {
       this.newShoppingListItem.userId = this.userId;
       this.firebaseService.addShoppingListItem(this.newShoppingListItem)
         .then(() => {
-          this.shoppingListItems.push({ ...this.newShoppingListItem });
+          this.shoppingListItems.push({...this.newShoppingListItem});
           this.newShoppingListItem = { name: '', userId: '', used: false };
+        })
+        .catch((error) => {
+          console.error('Error adding shopping list item:', error);
         });
     }
   }
 
   toggleUsed(shoppingListItem: ShoppingListItem): void {
     shoppingListItem.used = !shoppingListItem.used; // Toggle the used status
-    this.firebaseService.updateShoppingListItem(shoppingListItem.id!, shoppingListItem); // Update in Firebase
+    if (shoppingListItem.id) {
+      this.firebaseService.updateShoppingListItem(shoppingListItem.id, shoppingListItem); // Update in Firebase
+    }
   }
 
   deleteShoppingListItem(shoppingListItemId: string): void {
     this.firebaseService.deleteShoppingListItem(shoppingListItemId)
       .then(() => {
         this.shoppingListItems = this.shoppingListItems.filter(item => item.id !== shoppingListItemId);
+      })
+      .catch((error) => {
+        console.error('Error deleting shopping list item:', error);
       });
   }
 
@@ -52,6 +75,9 @@ export class ShoppingListComponent implements OnInit {
     this.firebaseService.clearShoppingListItems(this.userId)
       .then(() => {
         this.shoppingListItems = [];
+      })
+      .catch((error) => {
+        console.error('Error clearing shopping list items:', error);
       });
   }
 }
