@@ -1,25 +1,25 @@
-import {Component, OnInit} from '@angular/core';
-import {ShoppingListItem} from './shopping-list-item.model';
-import {FirebaseService} from '../../firebase.service';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-
+import { Component, OnInit } from '@angular/core';
+import { ShoppingListItem } from './shopping-list-item.model';
+import { FirebaseService } from '../../firebase.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-shopping-list',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './shopping-list.component.html',
-  styleUrl: './shopping-list.component.scss'
+  styleUrls: ['./shopping-list.component.scss'],
 })
 export class ShoppingListComponent implements OnInit {
   shoppingListItems: ShoppingListItem[] = [];
-  newShoppingListItem: ShoppingListItem = { name:"", userId:"", used: false };
-  userId: string = 'user123';
+  newShoppingListItem: ShoppingListItem = { name: '', userId: '', used: false };
+  userId: string = 'user123';  // Dynamically set this based on the authenticated user
 
   constructor(private firebaseService: FirebaseService) {}
 
   ngOnInit(): void {
+    // Assuming userId is set dynamically (e.g., from a user authentication service)
     this.firebaseService.getShoppingListItems(this.userId).then((items) => {
       this.shoppingListItems = items;
     });
@@ -30,8 +30,8 @@ export class ShoppingListComponent implements OnInit {
       this.newShoppingListItem.userId = this.userId;
       this.firebaseService.addShoppingListItem(this.newShoppingListItem)
         .then(() => {
-          this.shoppingListItems.push({...this.newShoppingListItem});
-          this.newShoppingListItem= { name: '', userId: '', used: false };
+          this.shoppingListItems.push({ ...this.newShoppingListItem });
+          this.newShoppingListItem = { name: '', userId: '', used: false };
         });
     }
   }
@@ -55,4 +55,3 @@ export class ShoppingListComponent implements OnInit {
       });
   }
 }
-

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from 'firebase/auth';
-import { getFirestore, collection, addDoc, onSnapshot, Timestamp, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, onSnapshot, Timestamp, deleteDoc, doc, getDocs, updateDoc, query, where } from 'firebase/firestore';
 import { getAnalytics, isSupported } from 'firebase/analytics';
 import { Appointment } from './appointment.model';
 import { Observable } from 'rxjs';
@@ -100,11 +100,18 @@ export class FirebaseService {
 
   //appointments coding
   async addAppointment(appointment: Appointment): Promise<void> {
+    const user = getAuth().currentUser;
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+
+    const userId = user.uid; // Get the current user's UID
     if (!appointment.date) {
       throw new Error("Appointment date is required");
     }
+
     try {
-      const docRef = await addDoc(collection(this.db, 'appointments'), {
+      const docRef = await addDoc(collection(this.db, `appointments/${userId}/userAppointments`), {
         date: appointment.date,
         startTime: appointment.startTime,
         endTime: appointment.endTime,
@@ -119,24 +126,25 @@ export class FirebaseService {
   }
 
   getAppointments(): Observable<Appointment[]> {
-    const appointmentsCollection = collection(this.db, 'appointments');
-    return new Observable<Appointment[]>(observer => {
-      const unsubscribe = onSnapshot(appointmentsCollection, querySnapshot => {
-        const appointments: Appointment[] = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-          date: doc.data()['date'] as Timestamp,
-          startTime: doc.data()['startTime'] as string,
-          endTime: doc.data()['endTime'] as string,
-          title: doc.data()['title'] as string,
-          description: doc.data()['description'] as string,
-        }) as Appointment);
-        observer.next(appointments);
-      }, error => {
-        observer.error(error);
-      });
+    const user = getAuth().currentUser;
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
 
-      return () => unsubscribe();
+    const userId = user.uid; // Get the current user's UID
+    const appointmentsCollection = collection(this.db, `appointments/${userId}/userAppointments`);
+
+    const appointmentsQuery = query(appointmentsCollection); // You can add more filters here if needed
+    return new Observable<Appointment[]>((observer) => {
+      getDocs(appointmentsQuery)
+        .then(snapshot => {
+          const appointments: Appointment[] = snapshot.docs.map(doc => doc.data() as Appointment);
+          observer.next(appointments);
+          observer.complete();
+        })
+        .catch(error => {
+          observer.error(error);
+        });
     });
   }
 
@@ -159,62 +167,66 @@ export class FirebaseService {
     }
   }
 
-//food planner coding
+// Add a new food item for the current user
   async addFoodItem(foodItem: FoodItem): Promise<void> {
     try {
       const docRef = await addDoc(collection(this.db, 'foodItems'), {
         name: foodItem.name,
         description: foodItem.description,
-        userId: foodItem.userId ?? "",  // Ensure userId is never undefined
+        userId: foodItem.userId,  // Ensure userId is set properly
+        used: foodItem.used || false, // Set default for 'used' if not provided
       });
-      console.log("Food item added with ID:", docRef.id);
+      console.log('Food item added with ID:', docRef.id);
       foodItem.id = docRef.id; // Set the id of the FoodItem
-    } catch (e: unknown) {
-      console.error("Error adding food item:", e);
+    } catch (e) {
+      console.error('Error adding food item:', e);
     }
   }
 
+  // Get food items for a specific user
   async getFoodItems(userId: string): Promise<FoodItem[]> {
     const foodItemsCollection = collection(this.db, 'foodItems');
-    const querySnapshot = await getDocs(foodItemsCollection);
+    const q = query(foodItemsCollection, where('userId', '==', userId)); // Filter by userId
+    const querySnapshot = await getDocs(q);
     const foodItems: FoodItem[] = [];
     querySnapshot.forEach((doc) => {
-      if (doc.data()['userId'] === userId) {
-        foodItems.push({id: doc.id, ...doc.data() as FoodItem});
-      }
+      foodItems.push({ id: doc.id, ...doc.data() as FoodItem });
     });
     return foodItems;
   }
 
+  // Update a food item
   async updateFoodItem(id: string, updatedFoodItem: FoodItem): Promise<void> {
     const foodItemRef = doc(this.db, 'foodItems', id);
     await updateDoc(foodItemRef, {
       name: updatedFoodItem.name,
       description: updatedFoodItem.description,
       userId: updatedFoodItem.userId,
-      used: updatedFoodItem.used // Include "used" property in the update
+      used: updatedFoodItem.used, // Include "used" property in the update
     });
-    console.log("Food item updated:", id);
+    console.log('Food item updated:', id);
   }
 
+  // Delete a food item
   async deleteFoodItem(id: string): Promise<void> {
     const foodItemRef = doc(this.db, 'foodItems', id);
     await deleteDoc(foodItemRef);
-    console.log("Food item deleted:", id);
+    console.log('Food item deleted:', id);
   }
 
+  // Clear all food items for a specific user
   async clearFoodItems(userId: string): Promise<void> {
     const foodItems = await this.getFoodItems(userId);
     for (const item of foodItems) {
-      if (item.id) { // Ensure that item.id is not undefined or null
+      if (item.id) {
         await this.deleteFoodItem(item.id);
       } else {
-        console.error("Food item does not have a valid ID:", item);
+        console.error('Food item does not have a valid ID:', item);
       }
     }
   }
 
-  //Shopping List Coding
+  // Add shopping list item
   async addShoppingListItem(shoppingListItem: ShoppingListItem): Promise<void> {
     try {
       const docRef = await addDoc(collection(this.db, 'shoppingListItems'), {
@@ -222,40 +234,45 @@ export class FirebaseService {
         userId: shoppingListItem.userId ?? "",  // Ensure userId is never undefined
       });
       console.log("Shopping List Item added with ID:", docRef.id);
-      shoppingListItem.id = docRef.id; // Set the id of the FoodItem
+      shoppingListItem.id = docRef.id; // Set the id of the Shopping List Item
     } catch (e: unknown) {
       console.error("Error adding shopping list item:", e);
     }
   }
 
+  // Get shopping list items for a specific user
   async getShoppingListItems(userId: string): Promise<ShoppingListItem[]> {
     const shoppingListCollection = collection(this.db, 'shoppingListItems');
-    const querySnapshot = await getDocs(shoppingListCollection);
+    const q = query(shoppingListCollection, where('userId', '==', userId)); // Filter by userId
+    const querySnapshot = await getDocs(q);
     const shoppingListItems: ShoppingListItem[] = [];
     querySnapshot.forEach((doc) => {
-      if (doc.data()['userId'] === userId) {
-        shoppingListItems.push({id: doc.id, ...doc.data() as ShoppingListItem});
-      }
+      shoppingListItems.push({ id: doc.id, ...doc.data() as ShoppingListItem });
     });
     return shoppingListItems;
   }
 
+
+
+  // Update a shopping list item
   async updateShoppingListItem(id: string, updatedShoppingListItem: ShoppingListItem): Promise<void> {
     const shoppingListItemRef = doc(this.db, 'shoppingListItems', id);
     await updateDoc(shoppingListItemRef, {
       name: updatedShoppingListItem.name,
       userId: updatedShoppingListItem.userId,
-      used: updatedShoppingListItem.used // Include "used" property in the update
+      used: updatedShoppingListItem.used, // Include "used" property in the update
     });
     console.log("Shopping List item updated:", id);
   }
 
+  // Delete a shopping list item
   async deleteShoppingListItem(id: string): Promise<void> {
     const shoppingListItemRef = doc(this.db, 'shoppingListItems', id);
     await deleteDoc(shoppingListItemRef);
     console.log("Shopping List item deleted:", id);
   }
 
+  // Clear all shopping list items for a user
   async clearShoppingListItems(userId: string): Promise<void> {
     const shoppingListItems = await this.getShoppingListItems(userId);
     for (const item of shoppingListItems) {
