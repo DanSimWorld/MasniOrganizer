@@ -1,5 +1,6 @@
 /* Basic styling for the header */
 header {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     justify-content: space-between; /* Space out the images and buttons */
     align-items: center;
@@ -19,6 +20,7 @@ header {
 
 /* Navigation styling */
 .navigation {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     justify-content: flex-end; /* Aligns buttons to the right */
     align-items: center; /* Center align vertically */
@@ -26,6 +28,7 @@ header {
 
 /* Styling for the buttons */
 .header-button {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #6da7e9;
     color: white;
     border: none;

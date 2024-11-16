@@ -54,6 +54,7 @@
 
 /* Button styling */
 .login-container button {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   width: 100%;
   padding: 0.75rem;
   border: none;
@@ -71,6 +72,7 @@
 /* Button hover and active states */
 .login-container button:hover {
   background-color: #0056b3;
+  transform: translateY(-2px);
 }
 
 .login-container button:active {
@@ -95,7 +97,7 @@
   padding: 0.75rem;
   border: none;
   border-radius: 4px;
-  background-color: #0075ff;
+  background-color: #6da7e9;
   color: #ffffff;
   font-size: 1rem;
   font-weight: bold;
@@ -106,7 +108,8 @@
 }
 
 .reset-password button:hover {
-  background-color: #0056b3;
+  transform: translateY(-2px);
+  background-color: #6da7e9;
 }
 
 .reset-password button:active {
