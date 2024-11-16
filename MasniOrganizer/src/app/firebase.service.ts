@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from 'firebase/auth';
 import { getFirestore, collection, addDoc, onSnapshot, Timestamp, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { getAnalytics, isSupported } from 'firebase/analytics';
 import { Appointment } from './appointment.model';
 import { Observable } from 'rxjs';
 import { FoodItem } from './home/foodplanner/food-item.model';
-import {ShoppingListItem} from './home/shopping-list/shopping-list-item.model';
+import { ShoppingListItem } from './home/shopping-list/shopping-list-item.model';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBJ4VU8NzNDGCSWE0zgPDpzW8jlmLVUwh8",
@@ -42,7 +42,27 @@ export class FirebaseService {
     this.db = getFirestore(this.app);
   }
 
-// login coding
+  // Signup method with user information saving
+  async signup(email: string, password: string, name: string): Promise<void> {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
+      const user = userCredential.user;
+
+      // Save the user information in Firestore
+      await addDoc(collection(this.db, 'users'), {
+        uid: user.uid,
+        email: user.email,
+        name: name,  // Store the name along with the email
+      });
+
+      console.log('Signup successful');
+    } catch (error: unknown) {
+      this.handleError(error);
+      throw new Error(error instanceof Error ? error.message : "An unknown error occurred during signup");
+    }
+  }
+
+  // login method
   async login(email: string, password: string): Promise<void> {
     try {
       await signInWithEmailAndPassword(this.auth, email, password);
