@@ -7,7 +7,6 @@ import { Appointment } from './appointment.model';
 import { Observable } from 'rxjs';
 import { FoodItem } from './home/foodplanner/food-item.model';
 import { ShoppingListItem } from './home/shopping-list/shopping-list-item.model';
-import {ShoppingListComponent} from "./home/shopping-list/shopping-list.component";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBJ4VU8NzNDGCSWE0zgPDpzW8jlmLVUwh8",
@@ -283,5 +282,25 @@ export class FirebaseService {
       }
     }
   }
+
+  // Search for users by email
+  searchUsers(email: string): Promise<any[]> {
+    const usersCollection = collection(this.db, 'users');
+
+    return getDocs(query(usersCollection, where('email', '==', email)))
+      .then(snapshot => {
+        if (snapshot.empty) {
+          return [];  // Return an empty array if no users match
+        } else {
+          // Properly type the snapshot and docs
+          return snapshot.docs.map(doc => doc.data());
+        }
+      })
+      .catch(error => {
+        console.error('Error getting users:', error);
+        throw new Error("Error retrieving users");
+      });
+  }
+
 }
 

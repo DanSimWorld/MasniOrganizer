@@ -1,0 +1,17 @@
+<div>
+  <input [(ngModel)]="searchTerm" placeholder="Enter full email address" type="email" />
+  <button (click)="searchUsers()">Search</button>
+
+  <!-- Show error message if any -->
+  <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
+
+  <!-- Display the search results -->
+  <ul *ngIf="users.length > 0">
+    <li *ngFor="let user of users">
+      {{ user.email }} - {{ user.name }}
+    </li>
+  </ul>
+
+  <!-- No results message only if search was performed and no results found -->
+  <p *ngIf="searchPerformed && users.length === 0 && errorMessage === ''">No results found.</p>
+</div>

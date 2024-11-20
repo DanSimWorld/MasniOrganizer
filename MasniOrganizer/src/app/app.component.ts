@@ -45,6 +45,12 @@ export class AppComponent implements OnInit {
     });
   }
 
+  navigateToMyFamily() {
+    this.router.navigate(['/my-family']).catch(error => {
+      console.error('Navigation to myFamily failed:', error);
+    });
+  }
+
   logout() {
     this.firebaseService.logout().then(() => {
       this.router.navigate(['/login'], {replaceUrl: true}).catch(error => {
