@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from 'firebase/auth';
-import { getFirestore, collection, addDoc, onSnapshot, Timestamp, deleteDoc, doc, getDocs, updateDoc, query, where } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, Timestamp, deleteDoc, doc, getDocs, updateDoc, query, where, writeBatch } from 'firebase/firestore';
 import { getAnalytics, isSupported } from 'firebase/analytics';
 import { Appointment } from './appointment.model';
 import { Observable } from 'rxjs';
@@ -301,6 +301,160 @@ export class FirebaseService {
         throw new Error("Error retrieving users");
       });
   }
+
+  // Send an invitation to another user
+  async sendInvitation(email: string): Promise<void> {
+    const user = this.auth.currentUser;
+    if (!user) throw new Error('User not authenticated');
+
+    try {
+      await addDoc(collection(this.db, 'invitations'), {
+        senderEmail: user.email,
+        recipientEmail: email,
+        status: 'pending', // Invitation is pending until accepted or declined
+        timestamp: Timestamp.now(),
+      });
+      console.log(`Invitation sent to ${email}`);
+    } catch (error) {
+      console.error('Error sending invitation:', error);
+      throw new Error('Error sending invitation');
+    }
+  }
+
+  // Get received invitations for the current user
+  async getReceivedInvitations(): Promise<any[]> {
+    const user = this.auth.currentUser;
+    if (!user) throw new Error('User not authenticated');
+
+    const invitationsRef = collection(this.db, 'invitations');
+    const invitationsQuery = query(invitationsRef, where('recipientEmail', '==', user.email), where('status', '==', 'pending'));
+
+    try {
+      const snapshot = await getDocs(invitationsQuery);
+      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (error) {
+      console.error('Error fetching received invitations:', error);
+      throw new Error('Error fetching invitations');
+    }
+  }
+
+  // Accept an invitation
+  async acceptInvitation(invitationId: string): Promise<void> {
+    const invitationRef = doc(this.db, 'invitations', invitationId);
+    try {
+      await updateDoc(invitationRef, { status: 'accepted' });
+      console.log(`Invitation ${invitationId} accepted`);
+    } catch (error) {
+      console.error('Error accepting invitation:', error);
+      throw new Error('Error accepting invitation');
+    }
+  }
+
+  // Decline an invitation
+  async declineInvitation(invitationId: string): Promise<void> {
+    const invitationRef = doc(this.db, 'invitations', invitationId);
+    try {
+      await updateDoc(invitationRef, { status: 'declined' });
+      console.log(`Invitation ${invitationId} declined`);
+    } catch (error) {
+      console.error('Error declining invitation:', error);
+      throw new Error('Error declining invitation');
+    }
+  }
+
+  async getSharedUsers(): Promise<{ email: string; name: string }[]> {
+    const user = this.auth.currentUser;
+    if (!user) throw new Error('User not authenticated');
+
+    const invitationsRef = collection(this.db, 'invitations');
+    const usersRef = collection(this.db, 'users'); // Collection containing user data
+
+    try {
+      // Query invitations where the current user is the sender
+      const senderQuery = query(
+        invitationsRef,
+        where('senderEmail', '==', user.email),
+        where('status', '==', 'accepted')  // Exclude revoked status
+      );
+      const senderSnapshot = await getDocs(senderQuery);
+
+      // Query invitations where the current user is the recipient
+      const recipientQuery = query(
+        invitationsRef,
+        where('recipientEmail', '==', user.email),
+        where('status', '==', 'accepted')
+      );
+      const recipientSnapshot = await getDocs(recipientQuery);
+
+      // Extract emails from both queries
+      const emails = [
+        ...senderSnapshot.docs.map(doc => doc.data()['recipientEmail']),
+        ...recipientSnapshot.docs.map(doc => doc.data()['senderEmail']),
+      ];
+
+      // Remove duplicate emails
+      const uniqueEmails = [...new Set(emails)];
+
+      // Fetch user details for the emails
+      const userPromises = uniqueEmails.map(async email => {
+        const userQuery = query(usersRef, where('email', '==', email));
+        const userSnapshot = await getDocs(userQuery);
+        const userDoc = userSnapshot.docs[0]; // Assume emails are unique
+
+        if (userDoc) {
+          const userData = userDoc.data();
+          return { email, name: userData['name'] || 'Unknown' };
+        } else {
+          return { email, name: 'Unknown' };
+        }
+      });
+
+      return await Promise.all(userPromises);
+    } catch (error) {
+      console.error('Error fetching shared users:', error);
+      throw new Error('Error fetching shared users');
+    }
+  }
+
+  async revokeAccess(email: string): Promise<void> {
+    const user = this.auth.currentUser;
+    if (!user) {
+      console.error('No authenticated user');
+      return;
+    }
+
+    const invitationsRef = collection(this.db, 'invitations');
+    const revokeQuery = query(
+      invitationsRef,
+      where('senderEmail', '==', user.email),
+      where('recipientEmail', '==', email),
+      where('status', '==', 'accepted')
+    );
+
+    try {
+      const snapshot = await getDocs(revokeQuery);
+
+      if (!snapshot.empty) {
+        const batch = writeBatch(this.db); // Use writeBatch to perform batch operations
+
+        snapshot.docs.forEach(doc => {
+          batch.update(doc.ref, { status: 'revoked' }); // Change status to 'revoked'
+        });
+
+        // Commit the batch operation
+        await batch.commit();
+        console.log(`Access revoked for ${email}`);
+      } else {
+        console.log('No access found to revoke');
+      }
+    } catch (error) {
+      console.error('Error revoking access:', error);
+      throw new Error('Error revoking access');
+    }
+  }
+
+
+
 
 }
 

@@ -17,23 +17,29 @@ export class MyFamilyComponent {
   searchTerm: string = '';
   users: any[] = [];
   errorMessage: string = '';
-  searchPerformed: boolean = false;  // Flag to track search status
+  searchPerformed: boolean = false;
 
-  constructor(private firebaseService: FirebaseService) {}
+  receivedInvitations: any[] = []; // Invitations from others
+  sharedUsers: any[] = []; // Users you already share data with
+
+  constructor(private firebaseService: FirebaseService) {
+    this.loadInvitations();
+    this.loadSharedUsers();
+  }
 
   searchUsers(): void {
-    this.searchPerformed = true;  // Set the flag to true when search is initiated
+    this.searchPerformed = true;
 
     if (this.searchTerm.trim() === '') {
       this.errorMessage = 'Please enter a valid email address.';
-      this.users = [];  // Clear previous search results
+      this.users = [];
       return;
     }
 
     this.firebaseService.searchUsers(this.searchTerm).then(
       (users) => {
         this.users = users;
-        this.errorMessage = '';  // Clear any previous error messages
+        this.errorMessage = '';
         if (users.length === 0) {
           this.errorMessage = 'No results found.';
         }
@@ -46,9 +52,59 @@ export class MyFamilyComponent {
     );
   }
 
-  // Email validation (basic check)
-  validateEmail(email: string): boolean {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    return emailRegex.test(email);
+  sendInvitation(email: string): void {
+    this.firebaseService.sendInvitation(email).then(() => {
+      alert('Invitation sent successfully.');
+    }).catch((error) => {
+      console.error('Error sending invitation:', error);
+      alert('Failed to send invitation.');
+    });
+  }
+
+  acceptInvitation(invitationId: string): void {
+    this.firebaseService.acceptInvitation(invitationId).then(() => {
+      alert('Invitation accepted.');
+      this.loadInvitations();
+      this.loadSharedUsers();
+    }).catch((error) => {
+      console.error('Error accepting invitation:', error);
+      alert('Failed to accept invitation.');
+    });
+  }
+
+  declineInvitation(invitationId: string): void {
+    this.firebaseService.declineInvitation(invitationId).then(() => {
+      alert('Invitation declined.');
+      this.loadInvitations();
+    }).catch((error) => {
+      console.error('Error declining invitation:', error);
+      alert('Failed to decline invitation.');
+    });
+  }
+
+  revokeAccess(email: string): void {
+    this.firebaseService.revokeAccess(email).then(() => {
+      alert('Access revoked.');
+      this.loadSharedUsers();
+    }).catch((error) => {
+      console.error('Error revoking access:', error);
+      alert('Failed to revoke access.');
+    });
+  }
+
+  private loadInvitations(): void {
+    this.firebaseService.getReceivedInvitations().then((invitations) => {
+      this.receivedInvitations = invitations;
+    }).catch((error) => {
+      console.error('Error loading invitations:', error);
+    });
+  }
+
+  private loadSharedUsers(): void {
+    this.firebaseService.getSharedUsers().then((users) => {
+      this.sharedUsers = users;
+    }).catch((error) => {
+      console.error('Error loading shared users:', error);
+    });
   }
 }

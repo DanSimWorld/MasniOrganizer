@@ -1,4 +1,5 @@
 <div>
+  <!-- Search Section -->
   <input [(ngModel)]="searchTerm" placeholder="Enter full email address" type="email" />
   <button (click)="searchUsers()">Search</button>
 
@@ -9,9 +10,41 @@
   <ul *ngIf="users.length > 0">
     <li *ngFor="let user of users">
       {{ user.email }} - {{ user.name }}
+      <button (click)="sendInvitation(user.email)">Send Invitation</button>
     </li>
   </ul>
 
   <!-- No results message only if search was performed and no results found -->
   <p *ngIf="searchPerformed && users.length === 0 && errorMessage === ''">No results found.</p>
 </div>
+
+<hr>
+
+<div>
+  <!-- Users You Share Data With Section -->
+  <h3>My Family Members</h3>
+  <ul *ngIf="sharedUsers.length > 0">
+    <li *ngFor="let user of sharedUsers">
+      {{ user.email }} - {{ user.name }}
+      <button (click)="revokeAccess(user.email)">Revoke Access</button>
+    </li>
+  </ul>
+  <p *ngIf="sharedUsers.length === 0">No shared users at the moment.</p>
+</div>
+
+<hr>
+
+<div>
+  <!-- Invitations Received Section -->
+  <h3>Invitations</h3>
+  <ul *ngIf="receivedInvitations.length > 0">
+    <li *ngFor="let invitation of receivedInvitations">
+      {{ invitation.senderEmail }}
+      <button (click)="acceptInvitation(invitation.id)">Accept</button>
+      <button (click)="declineInvitation(invitation.id)">Decline</button>
+    </li>
+  </ul>
+  <p *ngIf="receivedInvitations.length === 0">No invitations at the moment.</p>
+</div>
+
+
