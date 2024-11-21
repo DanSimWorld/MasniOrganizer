@@ -213,10 +213,14 @@ export class FirebaseService {
 // Add a new food item for the current user
   async addFoodItem(foodItem: FoodItem): Promise<void> {
     try {
+      const user = getAuth().currentUser; // Get the current user
+      if (!user) throw new Error('User is not authenticated');
+
       const docRef = await addDoc(collection(this.db, 'foodItems'), {
         name: foodItem.name,
         description: foodItem.description,
         userId: foodItem.userId,  // Ensure userId is set properly
+        userEmail: user.email,  // Add email of the user
         used: foodItem.used || false, // Set default for 'used' if not provided
       });
       console.log('Food item added with ID:', docRef.id);
@@ -226,10 +230,11 @@ export class FirebaseService {
     }
   }
 
+
   // Get food items for a specific user
-  async getFoodItems(userId: string): Promise<FoodItem[]> {
+  async getFoodItems(userEmail: string): Promise<FoodItem[]> {
     const foodItemsCollection = collection(this.db, 'foodItems');
-    const q = query(foodItemsCollection, where('userId', '==', userId)); // Filter by userId
+    const q = query(foodItemsCollection, where('userEmail', '==', userEmail)); // Filter by userEmail instead of userId
     const querySnapshot = await getDocs(q);
     const foodItems: FoodItem[] = [];
     querySnapshot.forEach((doc) => {
@@ -237,6 +242,7 @@ export class FirebaseService {
     });
     return foodItems;
   }
+
 
   // Update a food item
   async updateFoodItem(id: string, updatedFoodItem: FoodItem): Promise<void> {

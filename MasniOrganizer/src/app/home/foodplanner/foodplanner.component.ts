@@ -14,42 +14,78 @@ import { getAuth } from 'firebase/auth';
 })
 export class FoodPlannerComponent implements OnInit {
   foodItems: FoodItem[] = [];
-  newFoodItem: FoodItem = { name: '', description: '', userId: '', used: false };
-  userId: string = ''; // Will be set after authentication check
+  newFoodItem: FoodItem = { userEmail: null, name: '', description: '', userId: '', used: false };
+  userId: string = '';
+  userEmail: string | null = null;
+  sharedUsers: any[] = [];
 
   constructor(private firebaseService: FirebaseService) {}
 
   ngOnInit(): void {
     const user = getAuth().currentUser;
     if (user) {
-      this.userId = user.uid; // Get user ID from Firebase Authentication
-      this.loadFoodItems();
+      this.userId = user.uid;
+      this.userEmail = user.email;
+
+      // Load shared users after getting the current user
+      this.loadSharedUsers().then(() => {
+        // Load food items after shared users are loaded
+        this.loadFoodItems();
+      }).catch((error) => {
+        console.error('Error loading shared users:', error);
+      });
     } else {
       console.log('User is not authenticated');
     }
   }
 
   loadFoodItems() {
-    if (this.userId) {
-      this.firebaseService.getFoodItems(this.userId).then((items) => {
-        this.foodItems = items;
-      }).catch((error) => {
-        console.error('Error loading food items:', error);
-      });
+    if (this.userEmail) {
+      // Create an array of emails, including the logged-in user's email and shared users' emails
+      const emailsToFetch = [this.userEmail, ...this.sharedUsers.map(user => user.email)];
+
+      // Fetch food items for all users (logged-in user + shared users)
+      Promise.all(emailsToFetch.map((email) => this.firebaseService.getFoodItems(email)))
+        .then((itemsArray) => {
+          // Flatten the array of items from different users and set it to foodItems
+          this.foodItems = itemsArray.flat();
+        })
+        .catch((error) => {
+          console.error('Error loading food items:', error);
+        });
     }
   }
 
+  async loadSharedUsers(): Promise<void> {
+    try {
+      this.sharedUsers = await this.firebaseService.getSharedUsers();
+    } catch (error) {
+      console.error('Error loading shared users:', error);
+      throw error; // Rethrow the error so it can be caught in ngOnInit
+    }
+  }
+
+
   addFoodItem(): void {
     if (this.newFoodItem.name && this.userId) {
-      this.newFoodItem.userId = this.userId;
-      this.firebaseService.addFoodItem(this.newFoodItem)
-        .then(() => {
-          this.foodItems.push({...this.newFoodItem});
-          this.newFoodItem = { name: '', description: '', userId: '', used: false };
-        })
-        .catch((error) => {
-          console.error('Error adding food item:', error);
-        });
+      const user = getAuth().currentUser;  // Get current authenticated user
+      if (user) {
+        // Ensure userEmail is set
+        this.newFoodItem.userEmail = user.email || '';  // Default to empty string if null
+        this.newFoodItem.userId = this.userId;
+
+        this.firebaseService.addFoodItem(this.newFoodItem)
+          .then(() => {
+            this.foodItems.push({...this.newFoodItem});
+            // Reset the form, including userEmail
+            this.newFoodItem = { name: '', description: '', userId: '', userEmail: '', used: false };  // Reset form
+          })
+          .catch((error) => {
+            console.error('Error adding food item:', error);
+          });
+      } else {
+        console.error('User is not authenticated');
+      }
     }
   }
 
