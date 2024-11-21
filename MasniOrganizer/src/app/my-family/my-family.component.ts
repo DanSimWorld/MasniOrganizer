@@ -18,7 +18,6 @@ export class MyFamilyComponent {
   users: any[] = [];
   errorMessage: string = '';
   searchPerformed: boolean = false;
-
   receivedInvitations: any[] = []; // Invitations from others
   sharedUsers: any[] = []; // Users you already share data with
 

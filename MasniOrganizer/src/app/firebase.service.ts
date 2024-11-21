@@ -156,6 +156,49 @@ export class FirebaseService {
     }
   }
 
+  getAppointmentsByEmail(email: string): Observable<Appointment[]> {
+    const usersRef = collection(this.db, 'users');
+    collection(this.db, 'appointments');
+// Query users to get the UID by email
+    const userQuery = query(usersRef, where('email', '==', email));
+
+    return new Observable<Appointment[]>((observer) => {
+      getDocs(userQuery)
+        .then(userSnapshot => {
+          if (userSnapshot.empty) {
+            observer.error('User not found');
+            return;
+          }
+
+          const user = userSnapshot.docs[0].data();
+          const userId = user['uid'];  // Assuming 'uid' is stored in the user document
+
+          // Query the appointments collection for that user's appointments
+          const appointmentsRef = collection(this.db, `appointments/${userId}/userAppointments`);
+          const appointmentsQuery = query(appointmentsRef);
+
+          return getDocs(appointmentsQuery);
+        })
+        .then(snapshot => {
+          if (!snapshot || snapshot.empty) {
+            // Handle case where no appointments are found or snapshot is undefined
+            observer.next([]);
+            observer.complete();
+            return;
+          }
+
+          const appointments: Appointment[] = snapshot.docs.map(doc => doc.data() as Appointment);
+          observer.next(appointments);
+          observer.complete();
+        })
+        .catch(error => {
+          observer.error(error);
+        });
+    });
+  }
+
+
+
   async deleteAppointment(id: string): Promise<void> {
     const appointmentRef = doc(this.db, 'appointments', id);
     try {
@@ -420,28 +463,28 @@ export class FirebaseService {
     const user = this.auth.currentUser;
     if (!user) {
       console.error('No authenticated user');
-      return;
+      return; // Exit early if no user is authenticated
     }
 
     const invitationsRef = collection(this.db, 'invitations');
+
+    // Query for accepted invitations where current user is either sender or recipient
     const revokeQuery = query(
       invitationsRef,
-      where('senderEmail', '==', user.email),
-      where('recipientEmail', '==', email),
-      where('status', '==', 'accepted')
+      where('status', '==', 'accepted'),
+      where('senderEmail', 'in', [user.email, email]), // Either user is the sender
+      where('recipientEmail', 'in', [user.email, email]) // Or user is the recipient
     );
 
     try {
       const snapshot = await getDocs(revokeQuery);
+      console.log('Revoke Query Snapshot:', snapshot); // Log the snapshot to inspect the results
 
       if (!snapshot.empty) {
-        const batch = writeBatch(this.db); // Use writeBatch to perform batch operations
-
+        const batch = writeBatch(this.db);
         snapshot.docs.forEach(doc => {
-          batch.update(doc.ref, { status: 'revoked' }); // Change status to 'revoked'
+          batch.update(doc.ref, { status: 'revoked' }); // Set status to 'revoked' or delete as needed
         });
-
-        // Commit the batch operation
         await batch.commit();
         console.log(`Access revoked for ${email}`);
       } else {
@@ -454,7 +497,6 @@ export class FirebaseService {
   }
 
 
-
-
+// Helper function to update the shared users list after revocation
 }
 

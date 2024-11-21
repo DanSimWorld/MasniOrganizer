@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { startOfMonth, endOfMonth, eachDayOfInterval, subMonths, addMonths, isSameDay } from 'date-fns';
 import { CommonModule } from '@angular/common';
 import { FirebaseService } from '../../firebase.service';
@@ -22,13 +22,14 @@ export class AgendaComponent implements OnInit {
   appointments: Appointment[] = [];
   appointmentsForSelectedDay: Appointment[] = [];
   selectedAppointmentId: string | null = null;
+  sharedUsers: any[] = [];
 
-  constructor(private firebaseService: FirebaseService, private changeDetectorRef: ChangeDetectorRef) {}
+  constructor(private firebaseService: FirebaseService) {}
 
   async ngOnInit() {
     const analyticsEnabled = await isSupported();
     if (analyticsEnabled) {
-      // Initialize analytics if supported (if required for further functionality)
+      // Initialize analytics if required
     }
 
     this.generateMonthDays();
@@ -42,15 +43,40 @@ export class AgendaComponent implements OnInit {
   }
 
   loadAppointments() {
+    // First, load appointments for the current user
     this.firebaseService.getAppointments().subscribe({
       next: (data: Appointment[]) => {
         this.appointments = data;
-        console.log('Loaded appointments:', JSON.stringify(this.appointments, null, 2));
-        this.changeDetectorRef.detectChanges();  // Trigger change detection
+        console.log('Loaded current user appointments:', JSON.stringify(this.appointments, null, 2));
+
+        // After loading current user appointments, load shared users' appointments
+        this.loadSharedUserAppointments();
       },
       error: (error: any) => {
-        console.error("Error loading appointments:", error);
+        console.error("Error loading appointments for current user:", error);
       }
+    });
+  }
+
+  loadSharedUserAppointments() {
+    // First, load the shared users
+    this.firebaseService.getSharedUsers().then((users) => {
+      this.sharedUsers = users;
+      // For each shared user, load their appointments
+      this.sharedUsers.forEach(user => {
+        this.firebaseService.getAppointmentsByEmail(user.email).subscribe({
+          next: (data: Appointment[]) => {
+            console.log(`Loaded appointments for ${user.email}:`, data);
+            // Combine the current user's appointments with shared users' appointments
+            this.appointments = [...this.appointments, ...data];
+          },
+          error: (error: any) => {
+            console.error(`Error loading appointments for ${user.email}:`, error);
+          }
+        });
+      });
+    }).catch((error) => {
+      console.error('Error loading shared users:', error);
     });
   }
 
@@ -154,7 +180,6 @@ export class AgendaComponent implements OnInit {
       });
     }
   }
-
 
   // Method to check if the appointment is selected
   isSelected(appointment: Appointment): boolean {
