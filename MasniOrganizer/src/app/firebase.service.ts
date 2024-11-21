@@ -197,8 +197,6 @@ export class FirebaseService {
     });
   }
 
-
-
   async deleteAppointment(id: string): Promise<void> {
     const appointmentRef = doc(this.db, 'appointments', id);
     try {
@@ -278,12 +276,16 @@ export class FirebaseService {
   // Add a new shopping list item for the current user
   async addShoppingListItem(shoppingListItem: ShoppingListItem): Promise<void> {
     try {
+      const user = getAuth().currentUser; // Get the current user
+      if (!user) throw new Error('User is not authenticated');
+
       const docRef = await addDoc(collection(this.db, 'shoppingListItems'), {
         name: shoppingListItem.name,
         userId: shoppingListItem.userId,  // Ensure userId is set properly
+        userEmail: user.email,  // Add email of the user
         used: shoppingListItem.used || false, // Set default for 'used' if not provided
       });
-      console.log('Shopping List item added with ID:', docRef.id);
+      console.log('Shopping List Item added with ID:', docRef.id);
       shoppingListItem.id = docRef.id; // Set the id of the FoodItem
     } catch (e) {
       console.error('Error adding shopping list item:', e);
@@ -291,13 +293,13 @@ export class FirebaseService {
   }
 
   // Get shopping list items for a specific user
-  async getShoppingListItems(userId: string): Promise<ShoppingListItem[]> {
+  async getShoppingListItems(userEmail: string): Promise<ShoppingListItem[]> {
     const shoppingListItemsCollection = collection(this.db, 'shoppingListItems');
-    const q = query(shoppingListItemsCollection, where('userId', '==', userId)); // Filter by userId
+    const q = query(shoppingListItemsCollection, where('userEmail', '==', userEmail)); // Filter by userEmail instead of userId
     const querySnapshot = await getDocs(q);
     const shoppingListItems: ShoppingListItem[] = [];
     querySnapshot.forEach((doc) => {
-      shoppingListItems.push({ id: doc.id, ...doc.data() as ShoppingListItem });
+      shoppingListItems.push({ id: doc.id, ...doc.data() as FoodItem });
     });
     return shoppingListItems;
   }
@@ -501,8 +503,5 @@ export class FirebaseService {
       throw new Error('Error revoking access');
     }
   }
-
-
-// Helper function to update the shared users list after revocation
 }
 
