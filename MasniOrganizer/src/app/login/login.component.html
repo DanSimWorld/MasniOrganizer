@@ -1,22 +1,41 @@
 <div class="login-container">
-  <h2>{{ isLoginMode ? 'Login' : 'Reset Password' }}</h2>
+  <h2>{{ isLoginMode ? 'Login' : isSignUpMode ? 'Sign Up' : 'Reset Password' }}</h2>
 <form>
-  <form (submit)="login()">
+  <form (submit)="isSignUpMode ? signUp() : login()">
+    <!-- Name Field (only shown in Sign Up mode) -->
+    <label for="name" *ngIf="isSignUpMode">Name:</label>
+    <input type="text" id="name" [(ngModel)]="name" name="name" *ngIf="isSignUpMode" required>
+
+    <!-- Email Field -->
     <label for="email">Email:</label>
     <input type="email" id="email" [(ngModel)]="email" name="email" required>
 
-    <label for="password" *ngIf="isLoginMode">Password:</label>
-    <input type="password" id="password" [(ngModel)]="password" name="password" *ngIf="isLoginMode" required>
+    <!-- Password Field (for Login and Sign Up) -->
+    <label for="password" *ngIf="isLoginMode || isSignUpMode">Password:</label>
+    <input type="password" id="password" [(ngModel)]="password" name="password" *ngIf="isLoginMode || isSignUpMode" required>
 
-    <button type="submit">{{ isLoginMode ? 'Login' : 'Send Reset Link' }}</button>
+    <button type="submit">
+      {{ isLoginMode ? 'Login' : isSignUpMode ? 'Sign Up' : 'Send Reset Link' }}
+    </button>
   </form>
-
-  <div class="reset-password">
-  <button *ngIf="isLoginMode" (click)="onForgotPassword()">Forgot Password?</button>
-  <button *ngIf="!isLoginMode" (click)="onBackToLogin()">Back to Login</button>
-  </div>
-
+  <!-- Error Message -->
   <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+  <div class="reset-password">
+    <!-- Forgot Password Link -->
+    <button *ngIf="isLoginMode" (click)="onForgotPassword()">Forgot Password?</button>
 
+    <!-- Sign Up Link -->
+    <button *ngIf="isLoginMode" (click)="onSignUp()">Don't have an account?<br> Sign Up</button>
+
+    <!-- Back to Login Link (for Reset Password) -->
+    <button *ngIf="!isLoginMode" (click)="onBackToLogin()">Back to Login</button>
+
+    <!-- Success Message for Signup -->
+    <p *ngIf="isSignUpMode && !errorMessage">
+      A verification email will be sent to your email address. Please check your inbox.
+    </p>
+
+  </div>
 </form>
+
 </div>

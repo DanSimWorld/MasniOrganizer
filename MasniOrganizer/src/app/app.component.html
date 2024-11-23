@@ -5,6 +5,9 @@
     <img class="logo" src="./banner.png" alt="Banner Image">
   </div>
   <div class="navigation">
+    <button class="header-button" (click)="navigateToMyFamily()" *ngIf="showHomeButton">
+      <img src="./family.png" alt="Family Icon">My Family
+    </button>
     <button class="header-button" (click)="navigateToHome()" *ngIf="showHomeButton">
       <img src="./home.png" alt="Home Icon">Home
     </button>

@@ -1,5 +1,6 @@
 /* Basic styling for the header */
 header {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     justify-content: space-between; /* Space out the images and buttons */
     align-items: center;
@@ -19,6 +20,7 @@ header {
 
 /* Navigation styling */
 .navigation {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     justify-content: flex-end; /* Aligns buttons to the right */
     align-items: center; /* Center align vertically */
@@ -26,6 +28,7 @@ header {
 
 /* Styling for the buttons */
 .header-button {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #6da7e9;
     color: white;
     border: none;
@@ -36,9 +39,17 @@ header {
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s;
-    text-align: left;
+    text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    min-width: 100px;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
+
+
 
 /* Hover effect for buttons */
 .header-button:hover {
@@ -69,7 +80,8 @@ img {
     }
 
     .header-button {
-        width: 100%;
+        min-width: 100px;
+        min-height: 100px;
         margin: 0.25rem 0;
         font-size: 0.9rem;
     }

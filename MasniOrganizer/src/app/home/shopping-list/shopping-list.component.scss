@@ -2,7 +2,7 @@
   max-width: 400px;
   margin: 10px auto;
   padding: 20px;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #ffaa64;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -20,6 +20,7 @@ h2 {
   border-radius: 5px;
   padding: 10px;
   text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 h3 {
@@ -28,6 +29,7 @@ h3 {
   margin: 20px;
   text-align: center;
   padding: 10px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 input {
@@ -59,11 +61,6 @@ input {
   }
 }
 
-.clear-button-container {
-  display: block;
-  text-align: left;
-}
-
 ul {
   list-style-type: none;
   padding: 0;
@@ -78,6 +75,7 @@ li {
   border-radius: 5px;
   margin-top: 5px;
   cursor: pointer;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
   &.used {
     background-color: #8e785f; // Gray background for used items
@@ -107,6 +105,7 @@ li span {
 
 .clear-button {
   background-color: #6da7e9;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: white;
   border: none;
   border-radius: 50px;

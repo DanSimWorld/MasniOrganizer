@@ -1,5 +1,6 @@
 /* Tile container for grid layout */
 .tile-container {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive columns */
   grid-gap: 20px;
