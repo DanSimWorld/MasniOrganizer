@@ -9,12 +9,12 @@ import { ShoppingListComponent} from './home/shopping-list/shopping-list.compone
 import { MyFamilyComponent} from "./my-family/my-family.component";
 
 export const appRoutes: Routes = [
-  { path: '', redirectTo: 'my-family', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'agenda', component: AgendaComponent, canActivate: [AuthGuard] },
   { path: 'add', component: AddComponent, canActivate: [AuthGuard] },
   { path: 'foodplanner', component: FoodPlannerComponent, canActivate: [AuthGuard] },
-  { path: 'shopping-list', component: ShoppingListComponent },
+  { path: 'shopping-list', component: ShoppingListComponent, canActivate: [AuthGuard] },
   { path: 'my-family', component: MyFamilyComponent, canActivate: [AuthGuard] }
 ];
