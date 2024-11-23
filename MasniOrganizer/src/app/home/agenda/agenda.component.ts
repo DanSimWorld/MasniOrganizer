@@ -163,8 +163,16 @@ export class AgendaComponent implements OnInit {
 
   // Method to confirm deletion of appointment
   confirmDelete(appointment: Appointment) {
+    // Check if the appointment has an ID
+    if (!appointment.id) {
+      // If there's no ID, display the message about deleting only own appointments
+      alert("You can only delete your own appointments.");
+      return; // Exit the function to prevent further actions
+    }
+
+    // If there's an ID, proceed with the regular confirmation
     const confirmed = confirm(`Are you sure you want to delete the appointment "${appointment.title}"?`);
-    if (confirmed && appointment.id) {
+    if (confirmed) {
       // Call the delete function on Firebase
       this.firebaseService.deleteAppointment(appointment.id).then(() => {
         console.log('Appointment deleted');
@@ -180,6 +188,7 @@ export class AgendaComponent implements OnInit {
       });
     }
   }
+
 
   // Method to check if the appointment is selected
   isSelected(appointment: Appointment): boolean {
