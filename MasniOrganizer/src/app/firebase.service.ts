@@ -135,10 +135,14 @@ export class FirebaseService {
     const appointmentsCollection = collection(this.db, `appointments/${userId}/userAppointments`);
 
     const appointmentsQuery = query(appointmentsCollection); // You can add more filters here if needed
+
     return new Observable<Appointment[]>((observer) => {
       getDocs(appointmentsQuery)
         .then(snapshot => {
-          const appointments: Appointment[] = snapshot.docs.map(doc => doc.data() as Appointment);
+          const appointments: Appointment[] = snapshot.docs.map(doc => ({
+            id: doc.id, // Include Firestore document ID
+            ...doc.data(), // Include all other fields
+          }) as Appointment);
           observer.next(appointments);
           observer.complete();
         })
@@ -147,6 +151,7 @@ export class FirebaseService {
         });
     });
   }
+
 
   private handleError(e: unknown): void {
     if (e instanceof Error) {
@@ -198,15 +203,23 @@ export class FirebaseService {
   }
 
   async deleteAppointment(id: string): Promise<void> {
-    const appointmentRef = doc(this.db, 'appointments', id);
+    const user = getAuth().currentUser;
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+
+    const userId = user.uid; // Get the current user's UID
+    const appointmentRef = doc(this.db, `appointments/${userId}/userAppointments/${id}`); // Corrected path
+
     try {
-      await deleteDoc(appointmentRef);
+      await deleteDoc(appointmentRef); // Delete the document at the correct path
       console.log(`Appointment with ID ${id} deleted successfully`);
     } catch (error) {
       console.error("Error deleting appointment:", error);
-      throw error;
+      throw error; // Re-throw the error to handle it appropriately in the calling code
     }
   }
+
 
 // Add a new food item for the current user
   async addFoodItem(foodItem: FoodItem): Promise<void> {

@@ -157,7 +157,7 @@ export class AgendaComponent implements OnInit {
   }
 
   selectAppointment(appointment: Appointment) {
-    // Toggle selection (if appointment is already selected, unselect it)
+    console.log("Selected appointment ID:", appointment.id); // Debugging line
     this.selectedAppointmentId = this.selectedAppointmentId === appointment.id ? null : appointment.id;
   }
 
