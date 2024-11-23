@@ -107,12 +107,26 @@ export class ShoppingListComponent implements OnInit {
   }
 
   clearAllItems(): void {
-    this.firebaseService.clearShoppingListItems(this.userId)
-      .then(() => {
-        this.shoppingListItems = [];
+    // Create an array of emails to include the current user and all shared users
+    const emailsToFetch = [this.userEmail, ...this.sharedUsers.map(user => user.email)];
+
+    // Fetch all food items for the current user and shared users
+    Promise.all(emailsToFetch.map((email) => this.firebaseService.getShoppingListItems(email)))
+      .then((itemsArray) => {
+        // Flatten the array of items from different users
+        const allItems = itemsArray.flat();
+
+        // Delete each food item by its ID
+        Promise.all(allItems.map((item) => this.firebaseService.deleteShoppingListItem(item.id!)))
+          .then(() => {
+            this.shoppingListItems = [];  // Clear the local food items array
+          })
+          .catch((error) => {
+            console.error('Error deleting shopping list items:', error);
+          });
       })
       .catch((error) => {
-        console.error('Error clearing shopping list items:', error);
+        console.error('Error loading shopping list items:', error);
       });
   }
 }
