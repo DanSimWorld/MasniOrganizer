@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, sendEmailVerification, updateProfile } from 'firebase/auth';
 import { getFirestore, collection, addDoc, Timestamp, deleteDoc, doc, getDocs, updateDoc, query, where, writeBatch } from 'firebase/firestore';
 import { getAnalytics, isSupported } from 'firebase/analytics';
 import { Appointment } from './appointment.model';
@@ -9,14 +9,15 @@ import { FoodItem } from './home/foodplanner/food-item.model';
 import { ShoppingListItem } from './home/shopping-list/shopping-list-item.model';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBJ4VU8NzNDGCSWE0zgPDpzW8jlmLVUwh8",
-  authDomain: "masniofficeagenda.firebaseapp.com",
-  projectId: "masniofficeagenda",
-  storageBucket: "masniofficeagenda.appspot.com",
-  messagingSenderId: "176523511925",
-  appId: "1:176523511925:web:3c72a67b5fc3d2e679903c",
-  measurementId: "G-P3W83HV194"
+  apiKey: "AIzaSyCPru2yZ5eybekTPaiT6TLC5qY9s5fAAf4",
+  authDomain: "masni-organizer.firebaseapp.com",
+  projectId: "masni-organizer",
+  storageBucket: "masni-organizer.firebasestorage.app",
+  messagingSenderId: "348994153152",
+  appId: "1:348994153152:web:802fb8fbc50afd3d2f1b25",
+  measurementId: "G-SWYDY4FHRN"
 };
+
 
 @Injectable({
   providedIn: 'root',
@@ -48,19 +49,25 @@ export class FirebaseService {
       const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
       const user = userCredential.user;
 
+      // Set the displayName for the user in Firebase Authentication
+      await updateProfile(user, { displayName: name });
+
       // Save the user information in Firestore
       await addDoc(collection(this.db, 'users'), {
         uid: user.uid,
         email: user.email,
-        name: name,  // Store the name along with the email
+        name: name, // Store the name along with the email in Firestore
       });
 
-      console.log('Signup successful');
+      // Send the verification email
+      await this.sendVerificationEmail();
+      console.log('Signup successful, displayName set, and verification email sent.');
     } catch (error: unknown) {
       this.handleError(error);
       throw new Error(error instanceof Error ? error.message : "An unknown error occurred during signup");
     }
   }
+
 
   // login method
   async login(email: string, password: string): Promise<void> {
@@ -97,6 +104,27 @@ export class FirebaseService {
       throw new Error(error instanceof Error ? error.message : 'An unknown error occurred during password reset');
     }
   }
+
+  // Method to send a verification email
+  async sendVerificationEmail(): Promise<void> {
+    const user = this.auth.currentUser;
+    if (user) {
+      try {
+        await sendEmailVerification(user);
+        console.log('Verification email sent.');
+      } catch (error) {
+        this.handleError(error);
+        throw new Error(error instanceof Error ? error.message : 'An unknown error occurred while sending the verification email.');
+      }
+    }
+  }
+
+  // Method to check if the email is verified
+  isEmailVerified(): boolean {
+    const user = this.auth.currentUser;
+    return user ? user.emailVerified : false;
+  }
+
 
   //appointments coding
   async addAppointment(appointment: Appointment): Promise<void> {

@@ -27,9 +27,13 @@ export class LoginComponent {
       // User is logging in
       this.firebaseService.login(this.email, this.password)
         .then(() => {
-          this.router.navigate(['/home']).catch(error => {
-            console.error('Navigation to home failed:', error);
-          });
+          if (this.firebaseService.isEmailVerified()) {
+            this.router.navigate(['/home']).catch(error => {
+              console.error('Navigation to home failed:', error);
+            });
+          } else {
+            this.errorMessage = 'Please verify your email before logging in.';
+          }
         })
         .catch((error) => {
           this.errorMessage = error.message;
@@ -50,6 +54,7 @@ export class LoginComponent {
     }
   }
 
+
   // Sign Up method
   signUp() {
     if (!this.name || !this.email || !this.password) {
@@ -60,7 +65,8 @@ export class LoginComponent {
     // Call signup method with name, email, and password
     this.firebaseService.signup(this.email, this.password, this.name)  // Pass the name here
       .then(() => {
-        this.router.navigate(['/home']);
+        this.errorMessage = '';  // Clear any previous errors
+        this.router.navigate(['/login']);
       })
       .catch((error: Error) => {  // Type error as Error
         this.errorMessage = error.message;

@@ -29,6 +29,12 @@
 
     <!-- Back to Login Link (for Reset Password) -->
     <button *ngIf="!isLoginMode" (click)="onBackToLogin()">Back to Login</button>
+
+    <!-- Success Message for Signup -->
+    <p *ngIf="isSignUpMode && !errorMessage">
+      A verification email will be sent to your email address. Please check your inbox.
+    </p>
+
   </div>
 </form>
 

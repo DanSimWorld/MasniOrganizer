@@ -24,7 +24,7 @@
   <ul *ngIf="sharedUsers.length > 0">
     <li *ngFor="let user of sharedUsers">
       {{ user.name }}
-      <button (click)="revokeAccess(user.email)">Revoke Access</button>
+      <button class="revoke" (click)="revokeAccess(user.email)">Revoke Access</button>
     </li>
   </ul>
   <p *ngIf="sharedUsers.length === 0">No shared users at the moment.</p>
@@ -36,8 +36,8 @@
   <ul *ngIf="receivedInvitations.length > 0">
     <li *ngFor="let invitation of receivedInvitations">
       {{ invitation.senderEmail }}
-      <button (click)="acceptInvitation(invitation.id)">Accept</button>
-      <button (click)="declineInvitation(invitation.id)">Decline</button>
+      <button class="accept" (click)="acceptInvitation(invitation.id)">Accept</button>
+      <button class="revoke" (click)="declineInvitation(invitation.id)">Decline</button>
     </li>
   </ul>
   <p *ngIf="receivedInvitations.length === 0">No invitations at the moment.</p>
