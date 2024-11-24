@@ -42,17 +42,17 @@ https://danielchristianibee.github.io/MasniOrganizer/
 
 # Terms of Use and Privacy Policy
 
-**Data Storage and Security**
-    - Your appointments, food planner items, and shopping list data are securely stored in our database using Firebase Firestore.
-    - We do not share your data with third parties.
+**Data Storage and Security**:
+- Your appointments, food planner items, and shopping list data are securely stored in our database using Firebase Firestore.
+- We do not share your data with third parties.
 
-**Data Sharing**
-    - The "My Family" feature allows you to connect with other users of your choice.
-    - Shared data (appointments, food planner, or shopping list items) will only be visible to the users you select through this feature.
+**Data Sharing**:
+- The "My Family" feature allows you to connect with other users of your choice.
+- Shared data (appointments, food planner, or shopping list items) will only be visible to the users you select through this feature.
 
-**User Responsibility**
-    - You are responsible for the accuracy of the information you provide and the data you share through the app.
+**User Responsibility**:
+- You are responsible for the accuracy of the information you provide and the data you share through the app.
 
 **Privacy Protection**
-    - Your email address and personal details will never be sold, shared, or used for any purpose outside of providing the app’s functionality.
+ - Your email address and personal details will never be sold, shared, or used for any purpose outside of providing the app’s functionality.
 
