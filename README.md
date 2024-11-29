@@ -1,6 +1,6 @@
 # MasniOrganizer
 A family Organizer<br>
-https://danielchristianibee.github.io/MasniOrganizer/
+https://dansimworld.github.io/MasniOrganizer/
 
     
 ### Installation Instructions:
