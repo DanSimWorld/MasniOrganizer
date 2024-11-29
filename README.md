@@ -38,7 +38,7 @@ https://dansimworld.github.io/MasniOrganizer/
 - Family members that are shared will be shown here and access can be revoked at any time.
 
 ### Acknowledgment:
-   The app is a one man project and fully created by me: Daniel Christiani
+   The app is a one man project and fully created by me: Daniel C
 
 # Terms of Use and Privacy Policy
 
