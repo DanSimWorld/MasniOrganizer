@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { FirebaseService } from '../../firebase.service';
 import { v4 as uuidv4 } from 'uuid';
 import { Timestamp } from 'firebase/firestore';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add',
@@ -21,10 +20,7 @@ export class AddComponent {
   title: string = '';
   description: string = '';
 
-  constructor(
-    private firebaseService: FirebaseService,
-    private route: ActivatedRoute,
-    private router: Router) {
+  constructor(private firebaseService: FirebaseService, private route: ActivatedRoute) {
     this.route.queryParams.subscribe(params => {
       this.date = params['date'] || '';
       this.startTime = params['startTime'] || '';
@@ -47,10 +43,6 @@ export class AddComponent {
 
       this.firebaseService.addAppointment(newAppointment).then(() => {
         console.log('Appointment added successfully');
-
-        this.router.navigate(['/agenda'], {
-          queryParams: { date: this.date } // Pass the date as query parameter
-        });
         this.resetForm();
       }).catch(error => {
         console.error('Error adding appointment: ', error);

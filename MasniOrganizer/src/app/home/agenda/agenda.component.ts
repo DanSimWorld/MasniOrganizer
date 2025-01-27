@@ -6,7 +6,6 @@ import { RouterLink } from '@angular/router';
 import { Appointment } from '../../appointment.model';
 import { isSupported } from 'firebase/analytics';
 import { Timestamp } from 'firebase/firestore';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-agenda',
@@ -25,10 +24,7 @@ export class AgendaComponent implements OnInit {
   selectedAppointmentId: string | null = null;
   sharedUsers: any[] = [];
 
-  constructor(
-    private firebaseService: FirebaseService,
-    private route: ActivatedRoute
-  ) {}
+  constructor(private firebaseService: FirebaseService) {}
 
   async ngOnInit() {
     const analyticsEnabled = await isSupported();
@@ -38,15 +34,6 @@ export class AgendaComponent implements OnInit {
 
     this.generateMonthDays();
     this.loadAppointments();
-
-    // Check for date query parameter in URL
-    this.route.queryParams.subscribe(params => {
-      const selectedDate = params['date'];
-      if (selectedDate) {
-        this.selectedDay = new Date(selectedDate);
-        this.openDay(this.selectedDay); // Open the selected day
-      }
-    });
   }
 
   generateMonthDays() {
