@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { startOfMonth, endOfMonth, eachDayOfInterval, subMonths, addMonths, isSameDay } from 'date-fns';
-import { CommonModule } from '@angular/common';
-import { FirebaseService } from '../../firebase.service';
-import { RouterLink } from '@angular/router';
-import { Appointment } from '../../appointment.model';
-import { isSupported } from 'firebase/analytics';
-import { Timestamp } from 'firebase/firestore';
+import {Component, OnInit} from '@angular/core';
+import {addMonths, eachDayOfInterval, endOfMonth, isSameDay, startOfMonth, subMonths} from 'date-fns';
+import {CommonModule} from '@angular/common';
+import {FirebaseService} from '../../firebase.service';
+import {ActivatedRoute, RouterLink} from '@angular/router';
+import {Appointment} from '../../appointment.model';
+import {Timestamp} from 'firebase/firestore';
+
 
 @Component({
   selector: 'app-agenda',
@@ -24,16 +24,20 @@ export class AgendaComponent implements OnInit {
   selectedAppointmentId: string | null = null;
   sharedUsers: any[] = [];
 
-  constructor(private firebaseService: FirebaseService) {}
+  constructor(private firebaseService: FirebaseService, private route: ActivatedRoute) {}
 
-  async ngOnInit() {
-    const analyticsEnabled = await isSupported();
-    if (analyticsEnabled) {
-      // Initialize analytics if required
-    }
+  ngOnInit(): void {
+    // Load the appointments first
+    this.loadAppointments();
+
+    // Handle the day query parameter to open the selected day after data is loaded
+    this.route.queryParams.subscribe(params => {
+      if (params['day']) {
+        this.selectedDay = new Date(params['day']);
+      }
+    });
 
     this.generateMonthDays();
-    this.loadAppointments();
   }
 
   generateMonthDays() {
@@ -49,7 +53,9 @@ export class AgendaComponent implements OnInit {
         this.appointments = data;
         console.log('Loaded current user appointments:', JSON.stringify(this.appointments, null, 2));
 
-        // After loading current user appointments, load shared users' appointments
+        if (this.selectedDay) {
+          this.openDay(this.selectedDay);
+        } // After loading current user appointments, load shared users' appointments
         this.loadSharedUserAppointments();
       },
       error: (error: any) => {
@@ -80,6 +86,18 @@ export class AgendaComponent implements OnInit {
     });
   }
 
+  isToday(day: Date): boolean {
+    const today = new Date();
+    return day.toDateString() === today.toDateString();
+  }
+
+  hasAppointments(day: Date): boolean {
+    return this.appointments.some(appointment => {
+      const appointmentDate = (appointment.date as Timestamp).toDate();
+      return isSameDay(appointmentDate, day);
+    });
+  }
+
   openDay(day: Date) {
     this.selectedDay = day;
     this.generateTimeSlots();
@@ -93,14 +111,15 @@ export class AgendaComponent implements OnInit {
 
   generateTimeSlots() {
     this.timeSlots = Array.from({ length: 15 }, (_, i) => {
-      const hour = 7 + i; // Creates time slots from 7:00 to 22:00
+      const hour = (7 + i).toString().padStart(2, '0'); // Ensures two digits for hour
       return {
-        label: `${hour}:00 - ${hour + 1}:00`,
+        label: `${hour}:00 - ${parseInt(hour) + 1}:00`,
         startTime: `${hour}:00`,
-        endTime: `${hour + 1}:00`,
+        endTime: `${(parseInt(hour) + 1).toString().padStart(2, '0')}:00`, // Ensures two digits for the end time
       };
     });
   }
+
 
   isTimeInSlot(appointment: Appointment, time: { startTime: string, endTime: string }): boolean {
     const appointmentStartTime = new Date(`1970-01-01T${appointment.startTime.padStart(5, '0')}:00`);
