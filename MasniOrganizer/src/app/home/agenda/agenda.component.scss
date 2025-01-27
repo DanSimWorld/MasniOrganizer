@@ -88,8 +88,13 @@ h2 {
   }
 }
 
+.add-button-container {
+  display: flex;
+  justify-content: flex-end; /* Align the button container to the right */
+}
+
 .add-button {
-  background-color: #dc2828;
+  background-color: #6da7e9;
   color: white;
   border: none;
   border-radius: 50px;
@@ -113,7 +118,6 @@ h2 {
   color: red;
   margin-top: 5px;
 }
-
 
 .day.selected {
   background-color: #00796b; /* Dark teal for selected day */
@@ -143,17 +147,25 @@ h2 {
   background-color: #ffaa64; /* Light green for time slots */
   color: black; /* Dark green text */
   border-radius: 5px;
-
   transition: background-color 0.3s, transform 0.3s;
 }
 
 .time-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 96%;
   background-color: #ffdfba;
   padding: 10px;
   color: black; /* Dark green text */
   border-radius: 5px;
   border: 1px solid black; /* Light green border */
   transition: background-color 0.3s, transform 0.3s;
+}
+
+.time-text {
+  flex-grow: 1;
+  text-align: center;
 }
 
 .appointments {
@@ -171,7 +183,6 @@ h2 {
 
 .no-appointments {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #ff5722; /* Red color for no appointments message */
   font-style: italic;
 }
 
@@ -210,6 +221,10 @@ h2 {
 @media (max-width: 600px) {
   .month-view, .day-view {
     padding: 0 10px; /* Additional padding for smaller screens */
+  }
+
+  .time-label {
+    width: 93%;
   }
 
   .grid {

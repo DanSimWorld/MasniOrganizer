@@ -17,15 +17,16 @@
 </div>
 
 <div *ngIf="selectedDay" class="day-view">
-  <button class="normal-button"(click)="closeDay()">Back to Month View</button>
+  <button class="normal-button" (click)="closeDay()">Back to Month View</button>
   <h2>{{ selectedDay | date: 'EEEE, MMM d, yyyy' }}</h2>
   <div class="time-slots">
     <div *ngFor="let time of timeSlots" class="time-slot">
       <div class="time-label">
-        {{ time.label }}
+        <span class="time-text">{{ time.label }}</span>
+        <div class="add-button-container">
         <button class="add-button" [routerLink]="['/add']" [queryParams]="{ date: selectedDay | date: 'yyyy-MM-dd', startTime: time.startTime, endTime: time.endTime }">
           +
-        </button>
+        </button></div>
       </div>
 
       <!-- Only show appointments if there are appointments in the time slot -->
