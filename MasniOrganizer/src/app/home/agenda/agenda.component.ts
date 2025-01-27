@@ -80,6 +80,11 @@ export class AgendaComponent implements OnInit {
     });
   }
 
+  isToday(day: Date): boolean {
+    const today = new Date();
+    return day.toDateString() === today.toDateString();
+  }
+
   openDay(day: Date) {
     this.selectedDay = day;
     this.generateTimeSlots();

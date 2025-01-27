@@ -3,10 +3,15 @@
   <button (click)="previousMonth()">Previous Month</button>
   <button (click)="nextMonth()">Next Month</button>
   <div class="grid">
-    <div *ngFor="let day of daysInMonth" class="day" (click)="openDay(day)">
+    <div *ngFor="let day of daysInMonth"
+         class="day"
+         [class.today]="isToday(day)"
+         (click)="openDay(day)">
       {{ day | date: 'd' }}
       <div class="day-abbreviation">{{ day | date: 'EEE' }}</div>
     </div>
+
+
   </div>
 </div>
 

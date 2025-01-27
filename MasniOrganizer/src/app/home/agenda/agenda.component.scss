@@ -89,6 +89,10 @@ h2 {
   margin: 20px; /* Subtle shadow for depth */
 }
 
+.today {
+  background-color: #b4c2d3 !important;  /* Distinct orange highlight */
+}
+
 .day {
   padding: 15px; /* More padding for a better touch target */
   cursor: pointer;
@@ -100,7 +104,7 @@ h2 {
   transition: background-color 0.3s, transform 0.3s;
 
   &:hover {
-    background-color: #f39e49; /* Light hover effect */
+    background-color: #f39e49 !important; /* Light hover effect */
     transform: scale(1.05); /* Slight scale effect */
   }
 }
