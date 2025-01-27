@@ -9,9 +9,10 @@
          (click)="openDay(day)">
       {{ day | date: 'd' }}
       <div class="day-abbreviation">{{ day | date: 'EEE' }}</div>
+      <div *ngIf="hasAppointments(day)" class="appointment-indicator">
+        📅
+      </div>
     </div>
-
-
   </div>
 </div>
 

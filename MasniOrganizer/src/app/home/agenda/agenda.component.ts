@@ -85,6 +85,14 @@ export class AgendaComponent implements OnInit {
     return day.toDateString() === today.toDateString();
   }
 
+  hasAppointments(day: Date): boolean {
+    return this.appointments.some(appointment => {
+      const appointmentDate = (appointment.date as Timestamp).toDate();
+      return isSameDay(appointmentDate, day);
+    });
+  }
+
+
   openDay(day: Date) {
     this.selectedDay = day;
     this.generateTimeSlots();

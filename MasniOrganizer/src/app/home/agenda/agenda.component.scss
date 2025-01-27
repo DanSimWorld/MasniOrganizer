@@ -109,6 +109,13 @@ h2 {
   }
 }
 
+.appointment-indicator {
+  font-size: 1.2em;
+  color: red;
+  margin-top: 5px;
+}
+
+
 .day.selected {
   background-color: #00796b; /* Dark teal for selected day */
   color: #fff;
