@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FirebaseService } from '../../firebase.service';
@@ -20,7 +20,7 @@ export class AddComponent {
   title: string = '';
   description: string = '';
 
-  constructor(private firebaseService: FirebaseService, private route: ActivatedRoute) {
+  constructor(private firebaseService: FirebaseService, private route: ActivatedRoute, private router: Router) {
     this.route.queryParams.subscribe(params => {
       this.date = params['date'] || '';
       this.startTime = params['startTime'] || '';
@@ -43,6 +43,12 @@ export class AddComponent {
 
       this.firebaseService.addAppointment(newAppointment).then(() => {
         console.log('Appointment added successfully');
+
+        this.router.navigate(['/agenda'], {
+          queryParams: {
+            day: appointmentDate.toISOString(), // Pass the date as query parameter
+          },
+        });
         this.resetForm();
       }).catch(error => {
         console.error('Error adding appointment: ', error);

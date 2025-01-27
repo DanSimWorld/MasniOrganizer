@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { startOfMonth, endOfMonth, eachDayOfInterval, subMonths, addMonths, isSameDay } from 'date-fns';
-import { CommonModule } from '@angular/common';
-import { FirebaseService } from '../../firebase.service';
-import { RouterLink } from '@angular/router';
-import { Appointment } from '../../appointment.model';
-import { isSupported } from 'firebase/analytics';
-import { Timestamp } from 'firebase/firestore';
+import {Component, OnInit} from '@angular/core';
+import {addMonths, eachDayOfInterval, endOfMonth, isSameDay, startOfMonth, subMonths} from 'date-fns';
+import {CommonModule} from '@angular/common';
+import {FirebaseService} from '../../firebase.service';
+import {ActivatedRoute, RouterLink} from '@angular/router';
+import {Appointment} from '../../appointment.model';
+import {Timestamp} from 'firebase/firestore';
+
 
 @Component({
   selector: 'app-agenda',
@@ -24,16 +24,20 @@ export class AgendaComponent implements OnInit {
   selectedAppointmentId: string | null = null;
   sharedUsers: any[] = [];
 
-  constructor(private firebaseService: FirebaseService) {}
+  constructor(private firebaseService: FirebaseService, private route: ActivatedRoute) {}
 
-  async ngOnInit() {
-    const analyticsEnabled = await isSupported();
-    if (analyticsEnabled) {
-      // Initialize analytics if required
-    }
+  ngOnInit(): void {
+    // Load the appointments first
+    this.loadAppointments();
+
+    // Handle the day query parameter to open the selected day after data is loaded
+    this.route.queryParams.subscribe(params => {
+      if (params['day']) {
+        this.selectedDay = new Date(params['day']);
+      }
+    });
 
     this.generateMonthDays();
-    this.loadAppointments();
   }
 
   generateMonthDays() {
@@ -49,7 +53,9 @@ export class AgendaComponent implements OnInit {
         this.appointments = data;
         console.log('Loaded current user appointments:', JSON.stringify(this.appointments, null, 2));
 
-        // After loading current user appointments, load shared users' appointments
+        if (this.selectedDay) {
+          this.openDay(this.selectedDay);
+        } // After loading current user appointments, load shared users' appointments
         this.loadSharedUserAppointments();
       },
       error: (error: any) => {
