@@ -1,7 +1,7 @@
 <div *ngIf="!selectedDay" class="month-view">
   <h2>{{ currentMonth | date: 'MMMM yyyy' }}</h2>
-  <button (click)="previousMonth()">Previous Month</button>
-  <button (click)="nextMonth()">Next Month</button>
+  <button class="normal-button" (click)="previousMonth()">Previous Month</button>
+  <button class="normal-button" (click)="nextMonth()">Next Month</button>
   <div class="grid">
     <div *ngFor="let day of daysInMonth"
          class="day"
@@ -17,11 +17,16 @@
 </div>
 
 <div *ngIf="selectedDay" class="day-view">
-  <button (click)="closeDay()">Back to Month View</button>
+  <button class="normal-button"(click)="closeDay()">Back to Month View</button>
   <h2>{{ selectedDay | date: 'EEEE, MMM d, yyyy' }}</h2>
   <div class="time-slots">
     <div *ngFor="let time of timeSlots" class="time-slot">
-      <div class="time-label">{{ time.label }}</div>
+      <div class="time-label">
+        {{ time.label }}
+        <button class="add-button" [routerLink]="['/add']" [queryParams]="{ date: selectedDay | date: 'yyyy-MM-dd', startTime: time.startTime, endTime: time.endTime }">
+          +
+        </button>
+      </div>
 
       <!-- Only show appointments if there are appointments in the time slot -->
       <div class="appointments" *ngIf="areAppointmentsInTimeSlot(time)">
@@ -37,7 +42,7 @@
             </div>
 
             <!-- Only show delete button if the appointment is selected -->
-            <button *ngIf="isSelected(appointment)" (click)="confirmDelete(appointment)">Delete</button>
+            <button class="normal-button" *ngIf="isSelected(appointment)" (click)="confirmDelete(appointment)">Delete</button>
           </div>
         </div>
       </div>
@@ -47,11 +52,5 @@
         No appointments for this time slot.
       </div>
     </div>
-  </div>
-</div>
-
-<div class="add-appointment-container">
-  <div class="add-appointment" [routerLink]="['/add']">
-    <h1>Add Appointment</h1>
   </div>
 </div>

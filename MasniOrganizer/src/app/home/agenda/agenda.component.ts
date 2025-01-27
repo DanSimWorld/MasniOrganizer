@@ -92,7 +92,6 @@ export class AgendaComponent implements OnInit {
     });
   }
 
-
   openDay(day: Date) {
     this.selectedDay = day;
     this.generateTimeSlots();
@@ -106,14 +105,15 @@ export class AgendaComponent implements OnInit {
 
   generateTimeSlots() {
     this.timeSlots = Array.from({ length: 15 }, (_, i) => {
-      const hour = 7 + i; // Creates time slots from 7:00 to 22:00
+      const hour = (7 + i).toString().padStart(2, '0'); // Ensures two digits for hour
       return {
-        label: `${hour}:00 - ${hour + 1}:00`,
+        label: `${hour}:00 - ${parseInt(hour) + 1}:00`,
         startTime: `${hour}:00`,
-        endTime: `${hour + 1}:00`,
+        endTime: `${(parseInt(hour) + 1).toString().padStart(2, '0')}:00`, // Ensures two digits for the end time
       };
     });
   }
+
 
   isTimeInSlot(appointment: Appointment, time: { startTime: string, endTime: string }): boolean {
     const appointmentStartTime = new Date(`1970-01-01T${appointment.startTime.padStart(5, '0')}:00`);

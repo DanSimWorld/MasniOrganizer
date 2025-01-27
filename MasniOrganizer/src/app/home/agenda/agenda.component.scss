@@ -5,7 +5,7 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-button {
+.normal-button {
   background-color: #6da7e9;
     color: white;
     border: none;
@@ -21,13 +21,13 @@ button {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-button:hover {
+.normal-button:hover {
   transform: translateY(-2px);
   cursor: pointer;
 }
 
 /* Active effect */
-button:active {
+.normal-button:active {
   transform: translateY(2px);
 }
 
@@ -44,27 +44,6 @@ button:active {
     font-size: 2em; /* Larger font size for better visibility */
     color: #37474f; /* Darker color for better contrast */
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-  }
-
-  button {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #0075ff; /* Teal background */
-    color: #fff;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 5px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
-
-    &:hover {
-      background-color: #00796b; /* Darker teal on hover */
-      transform: translateY(-2px); /* Slight lift effect */
-    }
-
-    &:active {
-      transform: translateY(1px); /* Push down effect on click */
-    }
   }
 }
 
@@ -109,6 +88,26 @@ h2 {
   }
 }
 
+.add-button {
+  background-color: #dc2828;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 0.3rem 0.6rem;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  display: inline-block;
+  text-decoration: none !important;
+
+  &:hover {
+    transform: translateY(-2px);
+    cursor: pointer;
+  }
+}
+
 .appointment-indicator {
   font-size: 1.2em;
   color: red;
@@ -123,27 +122,6 @@ h2 {
 
 .day-view {
   margin-top: 20px;
-
-  button {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #6da7e9; /* Same as month view buttons */
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 1em;
-    cursor: pointer;
-    margin-bottom: 15px;
-    transition: background-color 0.3s, transform 0.3s;
-
-    &:hover {
-      transform: translateY(-2px);
-    }
-
-    &:active {
-      transform: translateY(1px);
-    }
-  }
 
   h2 {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -242,7 +220,7 @@ h2 {
     flex-direction: column; /* Stack buttons vertically */
   }
 
-  button {
+  .normal-button {
     width: 100%; /* Full width buttons */
     margin: 5px 0; /* Space between buttons */
   }

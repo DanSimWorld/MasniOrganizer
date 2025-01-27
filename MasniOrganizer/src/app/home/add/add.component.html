@@ -3,27 +3,26 @@
       Date:
       <input type="date" [(ngModel)]="date" name="date" required>
     </label>
-  
+
     <label>
       Start Time:
       <input type="time" [(ngModel)]="startTime" name="startTime" required>
     </label>
-  
+
     <label>
       End Time:
       <input type="time" [(ngModel)]="endTime" name="endTime" required>
     </label>
-  
+
     <label>
       Title:
       <input type="text" [(ngModel)]="title" name="title" required>
     </label>
-  
+
     <label>
       Description:
-      <textarea [(ngModel)]="description" name="description" required></textarea>
+      <textarea [(ngModel)]="description" name="description"></textarea>
     </label>
-  
+
     <button type="button" (click)="addAppointment()">Add Appointment</button>
   </form>
-  

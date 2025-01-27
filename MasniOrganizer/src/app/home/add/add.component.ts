@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Appointment } from '../../appointment.model';
 import { FormsModule } from '@angular/forms';
-import { FirebaseService } from '../../firebase.service'; // Import the service
-import { v4 as uuidv4 } from 'uuid'; // Import UUID generator
-import { Timestamp } from 'firebase/firestore'; // Import Firestore Timestamp
+import { FirebaseService } from '../../firebase.service';
+import { v4 as uuidv4 } from 'uuid';
+import { Timestamp } from 'firebase/firestore';
 
 @Component({
   selector: 'app-add',
@@ -14,37 +14,35 @@ import { Timestamp } from 'firebase/firestore'; // Import Firestore Timestamp
   styleUrls: ['./add.component.scss'],
 })
 export class AddComponent {
-  @Output() appointmentAdded = new EventEmitter<Appointment>();
-
-  date: Date | null = null; 
-  startTime: string = ''; 
-  endTime: string = ''; 
-  title: string = ''; 
+  date: string = '';
+  startTime: string = '';
+  endTime: string = '';
+  title: string = '';
   description: string = '';
 
-  constructor(private firebaseService: FirebaseService) {} // Inject FirebaseService
+  constructor(private firebaseService: FirebaseService, private route: ActivatedRoute) {
+    this.route.queryParams.subscribe(params => {
+      this.date = params['date'] || '';
+      this.startTime = params['startTime'] || '';
+      this.endTime = params['endTime'] || '';
+      console.log('Received params:', params);
+    });
+  }
 
   addAppointment() {
-    console.log('Add Appointment clicked'); // Debugging line
-  
-    // Ensure all fields are filled out
     if (this.date && this.startTime && this.endTime && this.title && this.description) {
-      // Convert this.date to a Date object if it’s not already
       const appointmentDate = new Date(this.date);
-  
-      // Construct the new appointment
-      const newAppointment: Appointment = {
-        id: uuidv4(), // Generate a unique ID
-        date: Timestamp.fromDate(appointmentDate), // Convert the Date to Firestore Timestamp
+      const newAppointment = {
+        id: uuidv4(),
+        date: Timestamp.fromDate(appointmentDate),
         startTime: this.startTime,
         endTime: this.endTime,
         title: this.title,
         description: this.description,
       };
-  
-      // Add the appointment via Firebase service
+
       this.firebaseService.addAppointment(newAppointment).then(() => {
-        this.appointmentAdded.emit(newAppointment); // Emit only after successful save
+        console.log('Appointment added successfully');
         this.resetForm();
       }).catch(error => {
         console.error('Error adding appointment: ', error);
@@ -53,13 +51,12 @@ export class AddComponent {
       console.error('All fields are required');
     }
   }
-  
 
   resetForm() {
-    this.date = null; 
-    this.startTime = ''; 
-    this.endTime = ''; 
-    this.title = ''; 
-    this.description = ''; 
+    this.date = '';
+    this.startTime = '';
+    this.endTime = '';
+    this.title = '';
+    this.description = '';
   }
 }
