@@ -16,7 +16,9 @@
           [class.used]="item.used"
           (click)="toggleUsed(item)">
         <span>{{ item.name }} ({{ item.description }})</span>
+        <div class="delete-button-container">
           <button class="delete-button" (click)="deleteFoodItem(item.id!); $event.stopPropagation()">&times;</button>
+        </div>
       </li>
     </ul>
   </div>
