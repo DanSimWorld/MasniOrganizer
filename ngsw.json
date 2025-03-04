@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1738007872410,
+  "timestamp": 1741088480061,
   "index": "https://dansimworld.github.io/MasniOrganizer/index.html",
   "assetGroups": [
     {
@@ -13,7 +13,7 @@
       "urls": [
         "https://dansimworld.github.io/MasniOrganizer/favicon.ico",
         "https://dansimworld.github.io/MasniOrganizer/index.html",
-        "https://dansimworld.github.io/MasniOrganizer/main.33876739e3c85809.js",
+        "https://dansimworld.github.io/MasniOrganizer/main.653f7543e3740948.js",
         "https://dansimworld.github.io/MasniOrganizer/manifest.webmanifest",
         "https://dansimworld.github.io/MasniOrganizer/polyfills.7a79b1741bd20fb9.js",
         "https://dansimworld.github.io/MasniOrganizer/runtime.a8df37e6941401da.js",
@@ -63,9 +63,9 @@
     "https://dansimworld.github.io/MasniOrganizer/icons/icon-512x512.png": "7645502f463d3277472a25f2a62c1b08b8a5f697",
     "https://dansimworld.github.io/MasniOrganizer/icons/icon-72x72.png": "de7c7a30627b2b14d110468c0b5263785510d25d",
     "https://dansimworld.github.io/MasniOrganizer/icons/icon-96x96.png": "28a2214d276a2a6d5a023e4a6e4382a978a5831c",
-    "https://dansimworld.github.io/MasniOrganizer/index.html": "3e543d1203b355520a30d824e71d9652856c110d",
+    "https://dansimworld.github.io/MasniOrganizer/index.html": "c689982fdb93485b8ea9b3d78b915500550d5a6a",
     "https://dansimworld.github.io/MasniOrganizer/logout.png": "620b4f06bdd561ae82b8555bf083509fd1e29384",
-    "https://dansimworld.github.io/MasniOrganizer/main.33876739e3c85809.js": "177ebd78b39eb54aebd53dd7ac10554fdea3034b",
+    "https://dansimworld.github.io/MasniOrganizer/main.653f7543e3740948.js": "cc39e473ae89be65d7efcf25f5eb9ea63c7eacab",
     "https://dansimworld.github.io/MasniOrganizer/manifest.webmanifest": "d7dcdabf1f1f4ba35fb6654eb274173eda67020f",
     "https://dansimworld.github.io/MasniOrganizer/polyfills.7a79b1741bd20fb9.js": "94b0e60d02274ef3838712176f5248ae02d01b54",
     "https://dansimworld.github.io/MasniOrganizer/runtime.a8df37e6941401da.js": "05e4e9a47bf57858f4132b1abc88856dddbc864b",
