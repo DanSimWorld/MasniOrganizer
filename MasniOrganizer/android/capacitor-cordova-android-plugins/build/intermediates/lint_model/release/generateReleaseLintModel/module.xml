@@ -1,0 +1,18 @@
+<lint-module
+    format="1"
+    dir="C:\Users\dbgch\OneDrive\Documenten\MasniOrganizer\MasniOrganizer\android\capacitor-cordova-android-plugins"
+    name=":capacitor-cordova-android-plugins"
+    type="LIBRARY"
+    maven="android:capacitor-cordova-android-plugins:unspecified"
+    agpVersion="8.7.2"
+    buildFolder="build"
+    bootClassPath="C:\Users\dbgch\AppData\Local\Android\Sdk\platforms\android-35\android.jar;C:\Users\dbgch\AppData\Local\Android\Sdk\build-tools\34.0.0\core-lambda-stubs.jar"
+    javaSourceLevel="21"
+    compileTarget="android-35"
+    neverShrinking="true">
+  <lintOptions
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true"/>
+  <variant name="release"/>
+</lint-module>
